@@ -2,7 +2,7 @@
 //  SelectedCity+CoreDataProperties.m
 //  Weather App
 //
-//  Created by RYAN ROSELLO on 1/13/16.
+//  Created by RYAN ROSELLO on 2/1/16.
 //  Copyright © 2016 RYAN ROSELLO. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -18,5 +18,6 @@
 @dynamic countryName;
 @dynamic lat;
 @dynamic lon;
+@dynamic dateSelected;
 
 @end

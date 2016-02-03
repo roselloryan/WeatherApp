@@ -38,6 +38,8 @@
 - (IBAction)addCityButtonTapped:(UIButton *)sender {
     
     [self checkForCityMatchAndSave];
+    [self.navigationController popViewControllerAnimated:YES];
+    
     
 }
 
@@ -114,10 +116,12 @@
         newCity.cityID = [possibleCitiesArray[0][@"_id"] integerValue];
         newCity.lat = [possibleCitiesArray[0][@"coord"][@"lat"] floatValue];
         newCity.lon = [possibleCitiesArray[0][@"coord"][@"lon"] floatValue];
+        newCity.dateSelected = NSTimeIntervalSince1970;
         
         NSLog(@"NOT IN THE MAP: IS THIS GETTING SAVED!!!!! %@", newCity);
         
         [sharedDataStore saveContext];
+        [self.navigationController popViewControllerAnimated:YES];
         
     }
     

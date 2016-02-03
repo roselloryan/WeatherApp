@@ -6,8 +6,17 @@
 	<dict>
 		<key>Weather App.xcscheme</key>
 		<dict>
+			<key>isShown</key>
+			<true/>
 			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+		<key>WeatherAppTodayExtension.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<true/>
+			<key>orderHint</key>
+			<integer>1</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
@@ -23,6 +32,16 @@
 			<true/>
 		</dict>
 		<key>1B0CBE1C1C3C53D60000DEC1</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>1B1C86BB1C4D9CBC003DB72F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>1B4BA4561C60271A00B11758</key>
 		<dict>
 			<key>primary</key>
 			<true/>

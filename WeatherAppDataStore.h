@@ -25,4 +25,6 @@
 
 -(void)fetchSelectedCities;
 
+-(void)deleteSelectedCityWithID:(NSInteger)cityID;
+
 @end
