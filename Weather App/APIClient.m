@@ -9,6 +9,7 @@
 #import "APIClient.h"
 #import "WeatherAppTableViewController.h"
 #import "WeatherAppDataStore.h"
+#import "UserCurrentLocation.h"
 
 
 @implementation APIClient
@@ -16,37 +17,69 @@
 
 +(void)getWeatherForCityID:(NSInteger)cityID WithCompletionBlock:(void(^)(NSDictionary *responseDictionary))completionBlock {
         
+    NSError *error = nil;
     
-        NSString *urlString = [NSString stringWithFormat:@"http://api.openweathermap.org/data/2.5/weather?id=%lu&appid=02fc2da6e2b5f9da39cb7b95a3210d2c", cityID];
+    NSString *urlString = [NSString stringWithFormat:@"http://api.openweathermap.org/data/2.5/weather?id=%lu&appid=02fc2da6e2b5f9da39cb7b95a3210d2c", cityID];
         
-        NSLog(@"URLString: %@", urlString);
+    NSLog(@"URLString: %@", urlString);
     
-        NSURL *url = [NSURL URLWithString:urlString];
+    NSURL *url = [NSURL URLWithString:urlString];
     
-        NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSession *session = [NSURLSession sharedSession];
     
-        NSURLSessionDataTask *dataTask = [session dataTaskWithURL: url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    NSURLSessionDataTask *dataTask = [session dataTaskWithURL: url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
             
-            if(!dataTask) {
+        if(!dataTask) {
                 NSLog(@"Error in API Client dataTask: %@", error);
-            }
+        }
            
-            // do something with response
+        // do something with response
+        NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
             
-            NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if(!responseDictionary) {
+            NSLog(@"Error in API Client response dictionary: %@", error);
+        }
             
-            if(!responseDictionary) {
-                NSLog(@"Error in API Client response dictionary: %@", error);
-            }
+        NSLog(@"response dictionary: %@", responseDictionary);
             
-            NSLog(@"response dictionary: %@", responseDictionary);
+        completionBlock(responseDictionary);
             
-            completionBlock(responseDictionary);
-            
-        }];
+    }];
+    
+    [dataTask resume];
+}
 
-        [dataTask resume];
-    }
+
++(void)getIconImageForIconID:(NSString *)iconIDString withCompletionBlock:(void(^)(UIImage *iconImage))completionBlock {
+ 
+    NSString *urlString = [NSString stringWithFormat:@"http://openweathermap.org/img/w/%@.png", iconIDString];
+    
+    NSURL *url = [NSURL URLWithString:urlString];
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    
+    NSURLSessionDataTask *dataTask = [session dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        
+        if(!dataTask) {
+            NSLog(@"Error in API Client IconImage dataTask: %@", error);
+        }
+        
+        NSData *dataResponse = [NSData dataWithData:data];
+        
+        if(!dataResponse) {
+            NSLog(@"error in dataResponse. Error: %@ \nError.localizedDiscription: %@",error, error.localizedDescription);
+        }
+        
+        NSLog(@"dataResponse: %@", dataResponse);
+        
+        UIImage *iconImage = [UIImage imageWithData:dataResponse];
+        
+        completionBlock(iconImage);
+        
+    }];
+    
+    [dataTask resume];
+}
 
 /*
  You can get ahold of its path with `[[NSBundle mainBundle] pathForResource:@"blah" ofType:@"json"]`
@@ -60,38 +93,6 @@
  
 */
 
-/* +(void)getAlbumCoverUrl:(NSString *)trackID withCompletionBlock:(void (^)(NSString *albumCoverLink))completionBlock {
-    
-    
-    NSString *urlString = [NSString stringWithFormat:@"https://api.spotify.com/v1/tracks/%@", trackID];
-    
-    NSURL *albumCoverURL = [NSURL URLWithString:urlString];
-    
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionDataTask *albumCoverDataTask = [session dataTaskWithURL:albumCoverURL completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        
-        NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-        
-        NSLog(@"Respose Dictionary: %@", responseDictionary);
-        
-        NSDictionary *albumDictionary = responseDictionary[@"album"];
-        NSLog(@"albumDictionary: %@", albumDictionary);
-        
-        NSArray *imagesArray =albumDictionary[@"images"];
-        NSLog(@"imagesArray: %@", imagesArray);
-        
-        NSDictionary *imageDictionary = imagesArray[1];
-        NSLog(@"imageDictionary: %@", imageDictionary);
-        
-        NSString *albumCoverLink = imageDictionary[@"url"];
-        NSLog(@"albumCoverLink: %@", albumCoverLink);
-        
-        
-        completionBlock(albumCoverLink);
-    }];
-    
-    [albumCoverDataTask resume];
-}
-*/
+
 
 @end

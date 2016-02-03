@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="M4Y-Lb-cyx">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+    </dependencies>
+    <scenes>
+        <!--Today View Controller-->
+        <scene sceneID="cwh-vc-ff4">
+            <objects>
+                <viewController id="M4Y-Lb-cyx" customClass="TodayViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="9Kr-by-lXO"/>
+                        <viewControllerLayoutGuide type="bottom" id="hhm-dk-K4z"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="kOn-UV-imd">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="cityNameLabel" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lg1-An-47C" userLabel="locationLabel">
+                                <rect key="frame" x="20" y="13" width="114.5" height="20.5"/>
+                                <color key="backgroundColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="tempLabel" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7WY-gL-LWV" userLabel="tempLabel">
+                                <rect key="frame" x="219" y="13" width="81" height="24"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="lg1-An-47C" firstAttribute="top" secondItem="9Kr-by-lXO" secondAttribute="bottom" constant="13" id="6wk-Cz-OML"/>
+                            <constraint firstItem="7WY-gL-LWV" firstAttribute="top" secondItem="9Kr-by-lXO" secondAttribute="bottom" constant="13" id="AvU-KQ-leR"/>
+                            <constraint firstItem="7WY-gL-LWV" firstAttribute="trailing" secondItem="kOn-UV-imd" secondAttribute="trailing" constant="-20" id="BdH-vv-kqN"/>
+                            <constraint firstItem="7WY-gL-LWV" firstAttribute="bottom" secondItem="hhm-dk-K4z" secondAttribute="top" constant="-13" id="Mzn-cT-jOH"/>
+                            <constraint firstItem="lg1-An-47C" firstAttribute="leading" secondItem="kOn-UV-imd" secondAttribute="leading" constant="20" id="Wi5-7L-Qy2"/>
+                        </constraints>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="320" height="50"/>
+                    <connections>
+                        <outlet property="locationLabel" destination="lg1-An-47C" id="zKt-o6-XbV"/>
+                        <outlet property="tempLabel" destination="7WY-gL-LWV" id="B0L-Ef-wRL"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vXp-U4-Rya" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="328" y="181"/>
+        </scene>
+    </scenes>
+</document>

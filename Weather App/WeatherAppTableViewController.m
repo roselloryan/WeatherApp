@@ -6,8 +6,9 @@
 #import "WeatherAppTableViewController.h"
 #import "DetailWeatherVIewControllerViewController.h"
 #import "WeatherAppDataStore.h"
-#import "AddCityViewController.h"
 #import "APIClient.h"
+#import "AddCityViewController.h"
+#import "SelectCityMapViewController.h"
 
 
 @interface WeatherAppTableViewController ()
@@ -25,9 +26,12 @@
     
     NSLog(@"viewDidLoad: called!!");
     
-    self.title = @"Select City for Weather";
-    self.navigationItem.title = @"Done";
-
+    self.navigationItem.title = @"Select City for Weather";
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
+                             forBarMetrics:UIBarMetricsDefault];
+    self.navigationController.navigationBar.shadowImage = [UIImage new];
+    self.navigationController.navigationBar.translucent = YES;
+ 
 
 // set up complete list of available cities. Yes. It's big.
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"city.list" ofType:@"json"];
@@ -142,24 +146,15 @@
         NSLog(@"DELETE SOME CITIES!!!");
         
         NSDictionary *cityDictionary = self.sharedWeatherAppDataStore.citiesWithWeatherArray[indexPath.row];
+        NSLog(@"Trying to delete:%@", cityDictionary[@"name"]);
         
-        NSFetchRequest *deleteFetch = [NSFetchRequest fetchRequestWithEntityName:@"SelectedCity"];
+        NSInteger cityID = [cityDictionary[@"id"]integerValue];
         
-        deleteFetch.predicate = [NSPredicate predicateWithFormat:@"cityID= %ld",[cityDictionary[@"id"]integerValue]];
-        NSLog(@"CityID: %ld", [cityDictionary[@"id"]integerValue]);
-        
-        NSArray *fetchArray = [self.sharedWeatherAppDataStore.managedObjectContext executeFetchRequest: deleteFetch error: nil];
-        
-        for(NSManagedObject *managedObject in fetchArray) {
-            [self.sharedWeatherAppDataStore.managedObjectContext deleteObject:managedObject];
-            
-            [self.sharedWeatherAppDataStore fetchSelectedCities];
-            NSLog(@"---IN THE DELETE FOR LOOP!!!---");
+        [self.sharedWeatherAppDataStore deleteSelectedCityWithID:cityID];
 
-        }
-        
-        [self.tableView reloadData];
     }
+    
+    [self.tableView reloadData];
 }
 
 #pragma mark - Navigation
@@ -185,6 +180,16 @@
         
     }
     
+}
+
+- (IBAction)unwindToTableViewController:(UIStoryboardSegue *)unwindSegue {
+
+    UIViewController *sourceViewController = unwindSegue.sourceViewController;
+    
+    if([sourceViewController isKindOfClass:[SelectCityMapViewController class]]) {
+        NSLog(@"Segue coming from Map!");
+    }
+
 }
 
 

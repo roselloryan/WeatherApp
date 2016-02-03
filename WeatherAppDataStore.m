@@ -65,6 +65,25 @@
     }
 }
 
+-(void)deleteSelectedCityWithID:(NSInteger)cityID {
+    // PUT THIS IN THE DATASTORE!!!
+    NSFetchRequest *deleteFetch = [NSFetchRequest fetchRequestWithEntityName:@"SelectedCity"];
+    
+    deleteFetch.predicate = [NSPredicate predicateWithFormat:@"cityID= %ld",cityID];
+    NSLog(@"CityID: %ld", cityID);
+    
+    NSArray *fetchArray = [self.managedObjectContext executeFetchRequest: deleteFetch error: nil];
+    
+    for(NSManagedObject *managedObject in fetchArray) {
+        
+        [self.managedObjectContext deleteObject:managedObject];
+        [self saveContext];
+        [self fetchSelectedCities];
+
+        NSLog(@"---IN THE DELETE FOR LOOP IN DATASTORE NOW!!!---");
+    }
+}
+
 - (void)saveContext
 {
     NSError *error = nil;
@@ -114,8 +133,19 @@
 -(void)fetchSelectedCities {
     
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"SelectedCity"];
-    self.selectedCitiesArray = [self.managedObjectContext executeFetchRequest:fetchRequest error:nil];
+//    self.selectedCitiesArray = [self.managedObjectContext executeFetchRequest:fetchRequest error:nil];
 
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dateSelected" ascending:YES];
+    NSArray *sortDescriptors = @[sortDescriptor];
+    [fetchRequest setSortDescriptors:sortDescriptors];
+    
+    NSError *error;
+    self.selectedCitiesArray = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (self.selectedCitiesArray == nil) {
+        
+        // Handle the error.
+        NSLog(@"Error in fetch request: %@ \n%@ \n %@", error, error.description, error.localizedDescription);
+    }
 }
 
 

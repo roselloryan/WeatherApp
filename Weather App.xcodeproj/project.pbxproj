@@ -20,12 +20,21 @@
 		1B0CBE221C3C53D60000DEC1 /* Weather_AppUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0CBE211C3C53D60000DEC1 /* Weather_AppUITests.m */; };
 		1B0CBE311C3C56CF0000DEC1 /* WeatherAppTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0CBE301C3C56CF0000DEC1 /* WeatherAppTableViewController.m */; };
 		1B0CBE341C3C57FA0000DEC1 /* AddCityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0CBE331C3C57FA0000DEC1 /* AddCityViewController.m */; };
+		1B1C86BF1C4D9CBC003DB72F /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B1C86BE1C4D9CBC003DB72F /* NotificationCenter.framework */; };
+		1B1C86C31C4D9CBC003DB72F /* TodayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B1C86C21C4D9CBC003DB72F /* TodayViewController.m */; };
+		1B1C86C61C4D9CBC003DB72F /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1B1C86C41C4D9CBC003DB72F /* MainInterface.storyboard */; };
+		1B1C86CA1C4D9CBC003DB72F /* WeatherAppTodayExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1B1C86BC1C4D9CBC003DB72F /* WeatherAppTodayExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1B44CB721C4477FE0057E942 /* SelectCityMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B44CB711C4477FE0057E942 /* SelectCityMapViewController.m */; };
+		1B4AA4321C513CC10085B3B3 /* UserCurrentLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B4AA4311C513CC10085B3B3 /* UserCurrentLocation.m */; };
+		1B4BA4511C60218C00B11758 /* SelectedCity+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B4BA44E1C60218C00B11758 /* SelectedCity+CoreDataProperties.m */; };
+		1B4BA4521C60218C00B11758 /* SelectedCity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B4BA4501C60218C00B11758 /* SelectedCity.m */; };
+		1BB5B0E81C516C3500905932 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BB5B0E71C516C3500905932 /* CoreLocation.framework */; };
+		1BB5B0E91C516C3F00905932 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BED392B1C456837004B3732 /* MapKit.framework */; };
+		1BB5B0EC1C51D35400905932 /* ExtensionAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BB5B0EB1C51D35400905932 /* ExtensionAPIClient.m */; };
+		1BEC2DE71C611B0400F9E541 /* WeatherStyleKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BEC2DE61C611B0400F9E541 /* WeatherStyleKit.m */; };
 		1BED392C1C456837004B3732 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BED392B1C456837004B3732 /* MapKit.framework */; };
 		1BED392F1C456B55004B3732 /* PossibleCity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BED392E1C456B55004B3732 /* PossibleCity.m */; };
 		1BED39321C46C8C8004B3732 /* DetailWeatherVIewControllerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BED39311C46C8C8004B3732 /* DetailWeatherVIewControllerViewController.m */; };
-		1BED39371C4703E2004B3732 /* SelectedCity+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BED39341C4703E2004B3732 /* SelectedCity+CoreDataProperties.m */; };
-		1BED39381C4703E2004B3732 /* SelectedCity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BED39361C4703E2004B3732 /* SelectedCity.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,7 +52,28 @@
 			remoteGlobalIDString = 1B0CBDF81C3C53D50000DEC1;
 			remoteInfo = "Weather App";
 		};
+		1B1C86C81C4D9CBC003DB72F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1B0CBDF11C3C53D50000DEC1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1B1C86BB1C4D9CBC003DB72F;
+			remoteInfo = WeatherAppTodayExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1B1C86CE1C4D9CBC003DB72F /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				1B1C86CA1C4D9CBC003DB72F /* WeatherAppTodayExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1B0189831C3C692B0098F00A /* APIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIClient.h; sourceTree = "<group>"; };
@@ -70,17 +100,32 @@
 		1B0CBE301C3C56CF0000DEC1 /* WeatherAppTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherAppTableViewController.m; sourceTree = "<group>"; };
 		1B0CBE321C3C57FA0000DEC1 /* AddCityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddCityViewController.h; sourceTree = "<group>"; };
 		1B0CBE331C3C57FA0000DEC1 /* AddCityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddCityViewController.m; sourceTree = "<group>"; };
+		1B1C86BC1C4D9CBC003DB72F /* WeatherAppTodayExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WeatherAppTodayExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B1C86BE1C4D9CBC003DB72F /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
+		1B1C86C11C4D9CBC003DB72F /* TodayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodayViewController.h; sourceTree = "<group>"; };
+		1B1C86C21C4D9CBC003DB72F /* TodayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TodayViewController.m; sourceTree = "<group>"; };
+		1B1C86C51C4D9CBC003DB72F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		1B1C86C71C4D9CBC003DB72F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1B44CB701C4477FE0057E942 /* SelectCityMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SelectCityMapViewController.h; path = ../SelectCityMapViewController.h; sourceTree = "<group>"; };
 		1B44CB711C4477FE0057E942 /* SelectCityMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SelectCityMapViewController.m; path = ../SelectCityMapViewController.m; sourceTree = "<group>"; };
+		1B4AA42E1C513AF20085B3B3 /* Weather App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Weather App.entitlements"; sourceTree = "<group>"; };
+		1B4AA42F1C513BD00085B3B3 /* WeatherAppTodayExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = WeatherAppTodayExtension.entitlements; sourceTree = "<group>"; };
+		1B4AA4301C513CC10085B3B3 /* UserCurrentLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCurrentLocation.h; sourceTree = "<group>"; };
+		1B4AA4311C513CC10085B3B3 /* UserCurrentLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCurrentLocation.m; sourceTree = "<group>"; };
+		1B4BA44D1C60218C00B11758 /* SelectedCity+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SelectedCity+CoreDataProperties.h"; path = "../SelectedCity+CoreDataProperties.h"; sourceTree = "<group>"; };
+		1B4BA44E1C60218C00B11758 /* SelectedCity+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "SelectedCity+CoreDataProperties.m"; path = "../SelectedCity+CoreDataProperties.m"; sourceTree = "<group>"; };
+		1B4BA44F1C60218C00B11758 /* SelectedCity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SelectedCity.h; path = ../SelectedCity.h; sourceTree = "<group>"; };
+		1B4BA4501C60218C00B11758 /* SelectedCity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SelectedCity.m; path = ../SelectedCity.m; sourceTree = "<group>"; };
+		1BB5B0E71C516C3500905932 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		1BB5B0EA1C51D35400905932 /* ExtensionAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExtensionAPIClient.h; sourceTree = "<group>"; };
+		1BB5B0EB1C51D35400905932 /* ExtensionAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExtensionAPIClient.m; sourceTree = "<group>"; };
+		1BEC2DE51C611B0400F9E541 /* WeatherStyleKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WeatherStyleKit.h; path = ../WeatherStyleKit.h; sourceTree = "<group>"; };
+		1BEC2DE61C611B0400F9E541 /* WeatherStyleKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WeatherStyleKit.m; path = ../WeatherStyleKit.m; sourceTree = "<group>"; };
 		1BED392B1C456837004B3732 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		1BED392D1C456B55004B3732 /* PossibleCity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PossibleCity.h; sourceTree = "<group>"; };
 		1BED392E1C456B55004B3732 /* PossibleCity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PossibleCity.m; sourceTree = "<group>"; };
 		1BED39301C46C8C8004B3732 /* DetailWeatherVIewControllerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailWeatherVIewControllerViewController.h; sourceTree = "<group>"; };
 		1BED39311C46C8C8004B3732 /* DetailWeatherVIewControllerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailWeatherVIewControllerViewController.m; sourceTree = "<group>"; };
-		1BED39331C4703E2004B3732 /* SelectedCity+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SelectedCity+CoreDataProperties.h"; sourceTree = "<group>"; };
-		1BED39341C4703E2004B3732 /* SelectedCity+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SelectedCity+CoreDataProperties.m"; sourceTree = "<group>"; };
-		1BED39351C4703E2004B3732 /* SelectedCity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectedCity.h; sourceTree = "<group>"; };
-		1BED39361C4703E2004B3732 /* SelectedCity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectedCity.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +151,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1B1C86B91C4D9CBC003DB72F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1BB5B0E91C516C3F00905932 /* MapKit.framework in Frameworks */,
+				1BB5B0E81C516C3500905932 /* CoreLocation.framework in Frameworks */,
+				1B1C86BF1C4D9CBC003DB72F /* NotificationCenter.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -115,6 +170,8 @@
 				1B0CBDFB1C3C53D60000DEC1 /* Weather App */,
 				1B0CBE151C3C53D60000DEC1 /* Weather AppTests */,
 				1B0CBE201C3C53D60000DEC1 /* Weather AppUITests */,
+				1B1C86C01C4D9CBC003DB72F /* WeatherAppTodayExtension */,
+				1B1C86BD1C4D9CBC003DB72F /* Frameworks */,
 				1B0CBDFA1C3C53D60000DEC1 /* Products */,
 				1BED392B1C456837004B3732 /* MapKit.framework */,
 			);
@@ -126,6 +183,7 @@
 				1B0CBDF91C3C53D60000DEC1 /* Weather App.app */,
 				1B0CBE121C3C53D60000DEC1 /* Weather AppTests.xctest */,
 				1B0CBE1D1C3C53D60000DEC1 /* Weather AppUITests.xctest */,
+				1B1C86BC1C4D9CBC003DB72F /* WeatherAppTodayExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -133,10 +191,13 @@
 		1B0CBDFB1C3C53D60000DEC1 /* Weather App */ = {
 			isa = PBXGroup;
 			children = (
-				1BED39331C4703E2004B3732 /* SelectedCity+CoreDataProperties.h */,
-				1BED39341C4703E2004B3732 /* SelectedCity+CoreDataProperties.m */,
-				1BED39351C4703E2004B3732 /* SelectedCity.h */,
-				1BED39361C4703E2004B3732 /* SelectedCity.m */,
+				1B4AA42E1C513AF20085B3B3 /* Weather App.entitlements */,
+				1B4BA44D1C60218C00B11758 /* SelectedCity+CoreDataProperties.h */,
+				1B4BA44E1C60218C00B11758 /* SelectedCity+CoreDataProperties.m */,
+				1B4BA44F1C60218C00B11758 /* SelectedCity.h */,
+				1B4BA4501C60218C00B11758 /* SelectedCity.m */,
+				1BEC2DE51C611B0400F9E541 /* WeatherStyleKit.h */,
+				1BEC2DE61C611B0400F9E541 /* WeatherStyleKit.m */,
 				1B0CBDFF1C3C53D60000DEC1 /* AppDelegate.h */,
 				1B0CBE001C3C53D60000DEC1 /* AppDelegate.m */,
 				1BED392D1C456B55004B3732 /* PossibleCity.h */,
@@ -190,6 +251,31 @@
 			path = "Weather AppUITests";
 			sourceTree = "<group>";
 		};
+		1B1C86BD1C4D9CBC003DB72F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1BB5B0E71C516C3500905932 /* CoreLocation.framework */,
+				1B1C86BE1C4D9CBC003DB72F /* NotificationCenter.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1B1C86C01C4D9CBC003DB72F /* WeatherAppTodayExtension */ = {
+			isa = PBXGroup;
+			children = (
+				1B4AA42F1C513BD00085B3B3 /* WeatherAppTodayExtension.entitlements */,
+				1B1C86C11C4D9CBC003DB72F /* TodayViewController.h */,
+				1B1C86C21C4D9CBC003DB72F /* TodayViewController.m */,
+				1B4AA4301C513CC10085B3B3 /* UserCurrentLocation.h */,
+				1B4AA4311C513CC10085B3B3 /* UserCurrentLocation.m */,
+				1BB5B0EA1C51D35400905932 /* ExtensionAPIClient.h */,
+				1BB5B0EB1C51D35400905932 /* ExtensionAPIClient.m */,
+				1B1C86C41C4D9CBC003DB72F /* MainInterface.storyboard */,
+				1B1C86C71C4D9CBC003DB72F /* Info.plist */,
+			);
+			path = WeatherAppTodayExtension;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -200,10 +286,12 @@
 				1B0CBDF51C3C53D50000DEC1 /* Sources */,
 				1B0CBDF61C3C53D50000DEC1 /* Frameworks */,
 				1B0CBDF71C3C53D50000DEC1 /* Resources */,
+				1B1C86CE1C4D9CBC003DB72F /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				1B1C86C91C4D9CBC003DB72F /* PBXTargetDependency */,
 			);
 			name = "Weather App";
 			productName = "Weather App";
@@ -246,6 +334,23 @@
 			productReference = 1B0CBE1D1C3C53D60000DEC1 /* Weather AppUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		1B1C86BB1C4D9CBC003DB72F /* WeatherAppTodayExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1B1C86CD1C4D9CBC003DB72F /* Build configuration list for PBXNativeTarget "WeatherAppTodayExtension" */;
+			buildPhases = (
+				1B1C86B81C4D9CBC003DB72F /* Sources */,
+				1B1C86B91C4D9CBC003DB72F /* Frameworks */,
+				1B1C86BA1C4D9CBC003DB72F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WeatherAppTodayExtension;
+			productName = WeatherAppTodayExtension;
+			productReference = 1B1C86BC1C4D9CBC003DB72F /* WeatherAppTodayExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -258,6 +363,14 @@
 					1B0CBDF81C3C53D50000DEC1 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = F65NY3FY34;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+							com.apple.Keychain = {
+								enabled = 0;
+							};
+						};
 					};
 					1B0CBE111C3C53D60000DEC1 = {
 						CreatedOnToolsVersion = 7.2;
@@ -266,6 +379,18 @@
 					1B0CBE1C1C3C53D60000DEC1 = {
 						CreatedOnToolsVersion = 7.2;
 						TestTargetID = 1B0CBDF81C3C53D50000DEC1;
+					};
+					1B1C86BB1C4D9CBC003DB72F = {
+						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = F65NY3FY34;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+							com.apple.Keychain = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -285,6 +410,7 @@
 				1B0CBDF81C3C53D50000DEC1 /* Weather App */,
 				1B0CBE111C3C53D60000DEC1 /* Weather AppTests */,
 				1B0CBE1C1C3C53D60000DEC1 /* Weather AppUITests */,
+				1B1C86BB1C4D9CBC003DB72F /* WeatherAppTodayExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -315,6 +441,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1B1C86BA1C4D9CBC003DB72F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1B1C86C61C4D9CBC003DB72F /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -324,9 +458,10 @@
 			files = (
 				1B0189851C3C692B0098F00A /* APIClient.m in Sources */,
 				1BED39321C46C8C8004B3732 /* DetailWeatherVIewControllerViewController.m in Sources */,
-				1BED39371C4703E2004B3732 /* SelectedCity+CoreDataProperties.m in Sources */,
-				1BED39381C4703E2004B3732 /* SelectedCity.m in Sources */,
+				1B4BA4521C60218C00B11758 /* SelectedCity.m in Sources */,
+				1B4BA4511C60218C00B11758 /* SelectedCity+CoreDataProperties.m in Sources */,
 				1B0CBE311C3C56CF0000DEC1 /* WeatherAppTableViewController.m in Sources */,
+				1BEC2DE71C611B0400F9E541 /* WeatherStyleKit.m in Sources */,
 				1B0189931C3DCAED0098F00A /* WeatherAppDataStore.m in Sources */,
 				1B44CB721C4477FE0057E942 /* SelectCityMapViewController.m in Sources */,
 				1B0CBE011C3C53D60000DEC1 /* AppDelegate.m in Sources */,
@@ -353,6 +488,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1B1C86B81C4D9CBC003DB72F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1B1C86C31C4D9CBC003DB72F /* TodayViewController.m in Sources */,
+				1B4AA4321C513CC10085B3B3 /* UserCurrentLocation.m in Sources */,
+				1BB5B0EC1C51D35400905932 /* ExtensionAPIClient.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -365,6 +510,11 @@
 			isa = PBXTargetDependency;
 			target = 1B0CBDF81C3C53D50000DEC1 /* Weather App */;
 			targetProxy = 1B0CBE1E1C3C53D60000DEC1 /* PBXContainerItemProxy */;
+		};
+		1B1C86C91C4D9CBC003DB72F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1B1C86BB1C4D9CBC003DB72F /* WeatherAppTodayExtension */;
+			targetProxy = 1B1C86C81C4D9CBC003DB72F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -383,6 +533,14 @@
 				1B0CBE0B1C3C53D60000DEC1 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		1B1C86C41C4D9CBC003DB72F /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1B1C86C51C4D9CBC003DB72F /* Base */,
+			);
+			name = MainInterface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -474,9 +632,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Weather App/Weather App.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "Weather App/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "RAR.Weather-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -488,9 +648,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Weather App/Weather App.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "Weather App/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "RAR.Weather-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -546,6 +708,38 @@
 			};
 			name = Release;
 		};
+		1B1C86CB1C4D9CBC003DB72F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = WeatherAppTodayExtension/WeatherAppTodayExtension.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = WeatherAppTodayExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "RAR.Weather-App.WeatherAppTodayExtension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		1B1C86CC1C4D9CBC003DB72F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = WeatherAppTodayExtension/WeatherAppTodayExtension.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = WeatherAppTodayExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "RAR.Weather-App.WeatherAppTodayExtension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -581,6 +775,15 @@
 			buildConfigurations = (
 				1B0CBE2D1C3C53D60000DEC1 /* Debug */,
 				1B0CBE2E1C3C53D60000DEC1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1B1C86CD1C4D9CBC003DB72F /* Build configuration list for PBXNativeTarget "WeatherAppTodayExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1B1C86CB1C4D9CBC003DB72F /* Debug */,
+				1B1C86CC1C4D9CBC003DB72F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

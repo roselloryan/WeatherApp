@@ -79,21 +79,16 @@
     newCity.countryName = cityDict[@"country"];
     newCity.lat = [cityDict[@"coord"][@"lat"] floatValue];
     newCity.lon = [cityDict[@"coord"][@"lon"] floatValue];
+    newCity.dateSelected = NSTimeIntervalSince1970;
     
     NSLog(@"SAVE IS ABOUT TO BE CALLED WITH CITY: %@", newCity);
     
     [sharedDataStore saveContext];
     
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self performSegueWithIdentifier:@"unwindSegue" sender:self];
     
 }
 
-
--(void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
-    
-    
-    
-}
 
 - (IBAction)cancelButtonTapped:(UIButton *)sender {
     
