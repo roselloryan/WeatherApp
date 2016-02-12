@@ -27,6 +27,7 @@
     self.topLabel.text = [NSString stringWithFormat:@"Select which %@", self.cityName];
     
     self.mapView.delegate = self;
+    [self.view sendSubviewToBack:self.mapView];
     
     [self.mapView removeAnnotations:self.mapView.annotations];
     [self.mapView addAnnotations: self.possibleCitiesArrayOfMKAnnotations];
@@ -79,7 +80,15 @@
     newCity.countryName = cityDict[@"country"];
     newCity.lat = [cityDict[@"coord"][@"lat"] floatValue];
     newCity.lon = [cityDict[@"coord"][@"lon"] floatValue];
-    newCity.dateSelected = NSTimeIntervalSince1970;
+  
+    // set up timeInterval from date since core data requires NSTimeInterval.
+    NSDate *referenceDate = [NSDate dateWithTimeIntervalSince1970:0];
+    NSLog(@"referenceDate: %@", referenceDate);
+    NSDate *date = [NSDate date];
+    NSLog(@"today's date: %@", date);
+    NSTimeInterval timeInterval = [date timeIntervalSinceDate:referenceDate];
+    NSLog(@"%f", timeInterval);
+    newCity.dateSelected = timeInterval;
     
     NSLog(@"SAVE IS ABOUT TO BE CALLED WITH CITY: %@", newCity);
     

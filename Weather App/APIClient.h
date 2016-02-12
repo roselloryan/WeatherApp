@@ -11,7 +11,7 @@
 
 @interface APIClient : NSObject
 
-+(void)getWeatherForCityID:(NSInteger)cityID WithCompletionBlock:(void(^)(NSDictionary *responseDictionary))completionBlock;
++(void)getWeatherForCityID:(NSInteger)cityID WithCompletionBlock:(void(^)(NSDictionary *responseDictionary, NSError *error))completionBlock;
 
 +(void)getIconImageForIconID:(NSString *)iconIDString withCompletionBlock:(void(^)(UIImage *iconImage))completionBlock;
 @end

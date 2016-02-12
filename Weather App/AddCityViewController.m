@@ -116,11 +116,20 @@
         newCity.cityID = [possibleCitiesArray[0][@"_id"] integerValue];
         newCity.lat = [possibleCitiesArray[0][@"coord"][@"lat"] floatValue];
         newCity.lon = [possibleCitiesArray[0][@"coord"][@"lon"] floatValue];
-        newCity.dateSelected = NSTimeIntervalSince1970;
+
+        // set up timeInterval from date since core data requires NSTimeInterval.
+        NSDate *referenceDate = [NSDate dateWithTimeIntervalSince1970:0];
+        NSLog(@"referenceDate: %@", referenceDate);
+        NSDate *date = [NSDate date];
+        NSLog(@"today's date: %@", date);
+        NSTimeInterval timeInterval = [date timeIntervalSinceDate:referenceDate];
+        NSLog(@"%f", timeInterval);
+        newCity.dateSelected = timeInterval;
         
         NSLog(@"NOT IN THE MAP: IS THIS GETTING SAVED!!!!! %@", newCity);
         
         [sharedDataStore saveContext];
+
         [self.navigationController popViewControllerAnimated:YES];
         
     }

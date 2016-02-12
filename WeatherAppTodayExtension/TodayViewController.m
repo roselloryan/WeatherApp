@@ -11,7 +11,7 @@
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) UserCurrentLocation *currentLocation;
 @property (weak, nonatomic) IBOutlet UILabel *locationLabel;
-@property (weak, nonatomic) IBOutlet UILabel *iconLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *iconImageView;
 @property (weak, nonatomic) IBOutlet UILabel *tempLabel;
 
 @end
@@ -63,6 +63,11 @@
         NSLog(@"LON: %@", [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude]);
         
         [ExtensionAPIClient getWeatherForCurrentLocation:currentLocation withCompletionBlock:^(NSDictionary *responseDictionary) {
+            
+            [ExtensionAPIClient getIconImageForIconID:responseDictionary[@"weather"][0][@"icon"] withCompletionBlock:^(UIImage *iconImage) {
+                //stuff
+                
+            }];
             
             // update today extension labels
             // get back on main thread to avoid error about updating from background thread.

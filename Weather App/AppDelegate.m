@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "WeatherStyleKit.h"
 
 @interface AppDelegate ()
 

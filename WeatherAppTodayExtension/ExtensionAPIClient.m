@@ -48,5 +48,36 @@
     [dataTask resume];
 }
 
++(void)getIconImageForIconID:(NSString *)iconIDString withCompletionBlock:(void(^)(UIImage *iconImage))completionBlock {
+    
+    NSString *urlString = [NSString stringWithFormat:@"http://openweathermap.org/img/w/%@.png", iconIDString];
+    
+    NSURL *url = [NSURL URLWithString:urlString];
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    
+    NSURLSessionDataTask *dataTask = [session dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        
+        if(!dataTask) {
+            NSLog(@"Error in API Client IconImage dataTask: %@", error);
+        }
+        
+        NSData *dataResponse = [NSData dataWithData:data];
+        
+        if(!dataResponse) {
+            NSLog(@"error in dataResponse. Error: %@ \nError.localizedDiscription: %@",error, error.localizedDescription);
+        }
+        
+        NSLog(@"dataResponse: %@", dataResponse);
+        
+        UIImage *iconImage = [UIImage imageWithData:dataResponse];
+        
+        completionBlock(iconImage);
+        
+    }];
+    
+    [dataTask resume];
+}
+
 
 @end

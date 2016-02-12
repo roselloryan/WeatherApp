@@ -9,6 +9,7 @@
 #import "WeatherAppDataStore.h"
 #import "APIClient.h"
 #import <CoreData/CoreData.h>
+#import "CityWithWeather.h"
 
 @implementation WeatherAppDataStore
 
@@ -34,7 +35,7 @@
     return self;
 }
 
--(void)getWeatherWithCompletion:(void (^)(BOOL success))completionBlock {
+-(void)getWeatherWithCompletion:(void (^)(BOOL success, NSError *error))completionBlock {
 
     
     if(self.selectedCitiesArray.count != 0) {
@@ -43,27 +44,62 @@
         
         for (SelectedCity *selectedCity in self.selectedCitiesArray) {
             
-            NSLog(@"\n\n ==== \n\n");
-            NSLog(@"%@", selectedCity);
-            NSLog(@"\n\n ==== \n\n");
-
-        
-        
+            NSLog(@"selectedCity in datastore: %@", selectedCity);
+            
+            
             NSInteger cityID = selectedCity.cityID;
        
-            //API client calls and returns weather dictionary for each city.
-            [APIClient getWeatherForCityID:cityID WithCompletionBlock:^(NSDictionary *responseDictionary) {
-                [self.citiesWithWeatherArray addObject: responseDictionary];
+            //API client calls and returns weather dictionary for each city then builds cityWithWeather object.
+            
+            [APIClient getWeatherForCityID:cityID WithCompletionBlock:^(NSDictionary *responseDictionary, NSError *error) {
+                
+                if (!responseDictionary) {
+                    // pass error through.
+                    completionBlock(NO, error);
+                    
+                }
+                
+                else {
+                //build cityWithWeatherObjects
+                
+                CityWithWeather *newCity = [[CityWithWeather alloc]init];
+                newCity.cityID = responseDictionary[@"id"];
+                newCity.cityName = responseDictionary[@"name"];
+                newCity.countryAbreviation = responseDictionary[@"sys"][@"country"];
+                newCity.dateSelected = selectedCity.dateSelected;
+                NSLog(@"newCity.dateSelected: %f", newCity.dateSelected);
+                NSLog(@"selectedCity.dateSelected: %f", selectedCity.dateSelected);
+                
+                newCity.tempInCelsius = [NSString stringWithFormat:@"%.0f°C",roundf([responseDictionary[@"main"][@"temp"] floatValue] -273.15)];
+                newCity.tempInFahrenheit = [NSString stringWithFormat:@"%.0f°F", roundf((1.8*([responseDictionary[@"main"][@"temp"] floatValue]-273))+32) ];
+                newCity.weatherDescription = responseDictionary[@"weather"][0][@"description"];
+               
+                newCity.tempHighInCelsius = [NSString stringWithFormat:@"%.0f°C", roundf([responseDictionary[@"main"][@"temp_max"] floatValue] -273.15)];
+                newCity.tempHighInFahrenheit = [NSString stringWithFormat:@"%.0f°F", roundf((1.8*([responseDictionary[@"main"][@"temp_max"] floatValue]-273))+32)];
+                newCity.tempLowInCelsius = [NSString stringWithFormat:@"%.0f°C", roundf([responseDictionary[@"main"][@"temp_min"] floatValue] -273.15)];
+                newCity.tempLowInFahrenheit = [NSString stringWithFormat:@"%.0f°F", roundf((1.8*([responseDictionary[@"main"][@"temp_min"] floatValue]-273))+32)];
+                
+                newCity.humidity =[NSString stringWithFormat:@"%@%%", responseDictionary[@"main"][@"humidity"]];
+                newCity.atmosphericPressure = [NSString stringWithFormat:@"%@hPa", responseDictionary[@"main"][@"pressure"]];
+                newCity.windSpeedMPH = [NSString stringWithFormat:@"%.1fmph", ([responseDictionary[@"wind"][@"speed"]floatValue] * 2.236936)];
+                newCity.windSpeedKPH = [NSString stringWithFormat:@"%.1fkm/h", ([responseDictionary[@"wind"][@"speed"]floatValue] * 3.6)];
+                newCity.iconID = responseDictionary[@"weather"][0][@"icon"];
+                
+                NSLog(@"newCity: %@", newCity);
+                
+                
+                [self.citiesWithWeatherArray addObject: newCity];
          
                 //check if all cities have response dictionary with weather
                 if (self.selectedCitiesArray.count == self.citiesWithWeatherArray.count && self.selectedCitiesArray.count > 0) {
-                    completionBlock(YES);
+                        completionBlock(YES, nil);
+                }
                 }
             }];
-         
         }
     }
 }
+
 
 -(void)deleteSelectedCityWithID:(NSInteger)cityID {
     // PUT THIS IN THE DATASTORE!!!

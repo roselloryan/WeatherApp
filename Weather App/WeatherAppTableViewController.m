@@ -9,6 +9,8 @@
 #import "APIClient.h"
 #import "AddCityViewController.h"
 #import "SelectCityMapViewController.h"
+#import "WeatherStyleKit.h"
+#import "CityWithWeather.h"
 
 
 @interface WeatherAppTableViewController ()
@@ -31,7 +33,17 @@
                              forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.shadowImage = [UIImage new];
     self.navigationController.navigationBar.translucent = YES;
- 
+    
+    
+    //playing with gradients
+//    
+//    CAGradientLayer *gradient = [CAGradientLayer layer];
+//    gradient.frame = self.view.bounds;
+//    gradient.colors = @[(id)[WeatherStyleKit sunBallGradientColor].CGColor,
+//                        (id)[WeatherStyleKit sunBallGradientColor2].CGColor];
+//    [self.view.layer addSublayer:gradient];
+//    [self.view bringSubviewToFront:self.tableView];
+    
 
 // set up complete list of available cities. Yes. It's big.
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"city.list" ofType:@"json"];
@@ -45,6 +57,7 @@
         // there was an error!
         NSLog(@"ERROR: %@", error);
     }
+
     
     self.allCitiesArray = arrayOfDictionariesForCities;
     NSLog(@"TableViewController allCitiestArray.count: %lu", self.allCitiesArray.count);
@@ -56,7 +69,7 @@
     
     [super viewWillAppear:animated];
     
-    NSLog(@"viewWillAppear: GETTING CALLED!!!");
+    NSLog(@"viewWillAppear: GETTING CALLED!!!");    
 
     self.sharedWeatherAppDataStore = [WeatherAppDataStore sharedWeatherAppDataStore];
     [self.sharedWeatherAppDataStore fetchSelectedCities];
@@ -69,16 +82,25 @@
         
         NSLog(@"DataStore.selectedCitiesArray In TableViewController: %@",self.sharedWeatherAppDataStore.selectedCitiesArray);
         
-        [self.sharedWeatherAppDataStore fetchSelectedCities];
+//        [self.sharedWeatherAppDataStore fetchSelectedCities];
 
-        [self.sharedWeatherAppDataStore getWeatherWithCompletion:^(BOOL success) {
+        [self.sharedWeatherAppDataStore getWeatherWithCompletion:^(BOOL success, NSError *error) {
             
             NSLog(@"WE DONE!!!");
             if (success == YES) {
-                
-                [self.tableView reloadData];
-                NSLog(@"HELLO SUCCESS!!");
-                
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    [self.tableView reloadData];
+                    NSLog(@"HELLO SUCCESS!!");
+                }];
+            }
+            else if(success == NO) {
+               //build alertControlerror
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Broken Things :(" message:@"The internet has been disrupted by the horrors of humanity. We're sorry to have to tell you like this." preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:nil];
+                [alertController addAction:okAction];
+                [self presentViewController:alertController animated:YES completion:^{
+                    // anything to do here? maybe try api again? say something witty?
+                }];
             }
         }];
     }
@@ -115,22 +137,14 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cityCell" forIndexPath:indexPath];
     
     //city name and country
-    NSString *cityName = self.sharedWeatherAppDataStore.citiesWithWeatherArray[indexPath.row][@"name"];
+    CityWithWeather *city= self.sharedWeatherAppDataStore.citiesWithWeatherArray[indexPath.row];
 
-    NSString *countryAbbreviation = self.sharedWeatherAppDataStore.citiesWithWeatherArray[indexPath.row][@"sys"][@"country"];
-
-    NSString *cityWithCountryAbrreviation = [NSString stringWithFormat:@"%@, %@", cityName, countryAbbreviation];
-    
+    NSString *cityWithCountryAbrreviation = [NSString stringWithFormat:@"%@, %@", city.cityName, city.countryAbreviation];
+    NSLog(@"cityWithCountryAbrreviation: %@", cityWithCountryAbrreviation);
     
     //temperature in C° and F°
     
-    CGFloat tempInCelsius = [self.sharedWeatherAppDataStore.citiesWithWeatherArray[indexPath.row][@"main"][@"temp"] floatValue] -273.15;
-    NSLog(@"%f", tempInCelsius);
-  
-    CGFloat tempInFahrenheit = (tempInCelsius * 9/5) + 32;
-    NSLog(@"%f", tempInFahrenheit);
-    
-    NSString *tempString = [NSString stringWithFormat:@"%.0f°C/%.0f°F", roundf(tempInCelsius), roundf(tempInFahrenheit)];
+    NSString *tempString = [NSString stringWithFormat:@"%@/%@", city.tempInCelsius, city.tempInFahrenheit];
     NSLog(@"%@", tempString);
     
     cell.detailTextLabel.text = tempString;
@@ -139,22 +153,30 @@
     return cell;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 60;
+}
+
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         NSLog(@"DELETE SOME CITIES!!!");
         
-        NSDictionary *cityDictionary = self.sharedWeatherAppDataStore.citiesWithWeatherArray[indexPath.row];
-        NSLog(@"Trying to delete:%@", cityDictionary[@"name"]);
+        CityWithWeather *cityToDelete = self.sharedWeatherAppDataStore.citiesWithWeatherArray[indexPath.row];
+        NSLog(@"Trying to delete:%@", cityToDelete.cityName);
         
-        NSInteger cityID = [cityDictionary[@"id"]integerValue];
+        NSInteger cityID = [cityToDelete.cityID integerValue];
+        
+        [self.sharedWeatherAppDataStore.citiesWithWeatherArray removeObject:self.sharedWeatherAppDataStore.citiesWithWeatherArray[indexPath.row]];
         
         [self.sharedWeatherAppDataStore deleteSelectedCityWithID:cityID];
 
     }
-    
-    [self.tableView reloadData];
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        [self.tableView reloadData];
+    }];
 }
 
 #pragma mark - Navigation
@@ -174,9 +196,9 @@
         DetailWeatherVIewControllerViewController *destinationVC = segue.destinationViewController;
         
         NSIndexPath *selectedIndexPath = self.tableView.indexPathForSelectedRow;
-        NSDictionary *cityDictionary = self.sharedWeatherAppDataStore.citiesWithWeatherArray[selectedIndexPath.row];
+        CityWithWeather *city = self.sharedWeatherAppDataStore.citiesWithWeatherArray[selectedIndexPath.row];
         
-        destinationVC.cityDictionary = cityDictionary;
+        destinationVC.cityWithWeather = city;
         
     }
     

@@ -19,7 +19,7 @@
 
 + (instancetype)sharedWeatherAppDataStore;
 
--(void)getWeatherWithCompletion:(void (^)(BOOL success))completionBlock;
+-(void)getWeatherWithCompletion:(void (^)(BOOL success, NSError *error))completionBlock;
 
 - (void)saveContext;
 
