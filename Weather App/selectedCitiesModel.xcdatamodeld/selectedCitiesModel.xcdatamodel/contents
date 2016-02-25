@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15C50" minimumToolsVersion="Xcode 7.0">
     <entity name="SelectedCity" representedClassName="SelectedCity" syncable="YES">
+        <attribute name="atmosphericPressure" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="cityID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="cityName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="countryName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dateSelected" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="humidity" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="iconID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lat" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="lon" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="sunrise" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="sunset" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="tempHighInCelsius" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tempHighInFahrenheit" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tempInCelsius" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tempInFahrenheit" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tempLowInCelsius" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tempLowInFahrenheit" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="updated" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="updateLastAttempt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="weatherDescription" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="windSpeedKPH" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="windSpeedMPH" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="SelectedCity" positionX="-3152" positionY="-18" width="128" height="135"/>
+        <element name="SelectedCity" positionX="-3152" positionY="-18" width="128" height="375"/>
     </elements>
 </model>

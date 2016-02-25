@@ -31,11 +31,14 @@
     
     [self.mapView removeAnnotations:self.mapView.annotations];
     [self.mapView addAnnotations: self.possibleCitiesArrayOfMKAnnotations];
-    [self.mapView showAnnotations:self.possibleCitiesArrayOfMKAnnotations animated:YES];
-    
-    
+//    [self.mapView showAnnotations:self.possibleCitiesArrayOfMKAnnotations animated:YES];
 }
 
+-(void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+     [self.mapView showAnnotations:self.possibleCitiesArrayOfMKAnnotations animated:YES];
+    
+}
 
 // add right callout accesory and button to MKAnnotationViews
 -(MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
@@ -47,10 +50,13 @@
         view = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuseID];
         
         view.canShowCallout = YES;
-        UIButton *checkButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 46, 46)];
-        [checkButton setTitle:@"✅" forState:UIControlStateNormal];
+        UIButton *checkButton = [[UIButton alloc]initWithFrame:CGRectMake(0,0,46,46)];
+        checkButton.titleLabel.font =[UIFont systemFontOfSize:40];
+        [checkButton setTitle:@"" forState:UIControlStateNormal];
+
+//        checkButton.backgroundColor = [UIColor yellowColor];
         view.rightCalloutAccessoryView = checkButton;
-        
+
     }
     view.annotation = annotation;
     
@@ -80,6 +86,7 @@
     newCity.countryName = cityDict[@"country"];
     newCity.lat = [cityDict[@"coord"][@"lat"] floatValue];
     newCity.lon = [cityDict[@"coord"][@"lon"] floatValue];
+    newCity.updated = NO;
   
     // set up timeInterval from date since core data requires NSTimeInterval.
     NSDate *referenceDate = [NSDate dateWithTimeIntervalSince1970:0];
@@ -88,16 +95,19 @@
     NSLog(@"today's date: %@", date);
     NSTimeInterval timeInterval = [date timeIntervalSinceDate:referenceDate];
     NSLog(@"%f", timeInterval);
-    newCity.dateSelected = timeInterval;
+//    newCity.dateSelected = timeInterval;
+    newCity.dateSelected = [NSDate date];
     
     NSLog(@"SAVE IS ABOUT TO BE CALLED WITH CITY: %@", newCity);
     
     [sharedDataStore saveContext];
     
+
     [self performSegueWithIdentifier:@"unwindSegue" sender:self];
     
 }
 
+    
 
 - (IBAction)cancelButtonTapped:(UIButton *)sender {
     

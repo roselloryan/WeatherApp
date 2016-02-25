@@ -1,15 +1,11 @@
-//
+
 //  WeatherAppDataStore.m
-//  Weather App
-//
-//  Created by RYAN ROSELLO on 1/6/16.
-//  Copyright © 2016 RYAN ROSELLO. All rights reserved.
-//
+
 
 #import "WeatherAppDataStore.h"
 #import "APIClient.h"
 #import <CoreData/CoreData.h>
-#import "CityWithWeather.h"
+#import "SelectedCity.h"
 
 @implementation WeatherAppDataStore
 
@@ -24,81 +20,180 @@
 }
 
 
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        _citiesWithWeatherArray = [[NSMutableArray alloc] init];
+-(void)getWeatherWithCompletion:(void (^)(BOOL success, NSError *error))completionBlock {
+    
+    for (NSInteger i =0 ; i<self.selectedCitiesArray.count; i++) {
+
+        SelectedCity *selectedCity = self.selectedCitiesArray[i];
+ 
+        NSFetchRequest *updateFetch = [NSFetchRequest fetchRequestWithEntityName:@"SelectedCity"];
+        updateFetch.predicate = [NSPredicate predicateWithFormat:@"cityID= %ld",selectedCity.cityID];
+        NSArray *fetchArray = [self.managedObjectContext executeFetchRequest: updateFetch error: nil];
         
-        [self fetchSelectedCities];
+        for(SelectedCity *managedSelectedCity in fetchArray) {
+
+            NSTimeInterval timeSinceLastUpdate = [[NSDate date] timeIntervalSinceDate:managedSelectedCity.updateLastAttempt];
+            NSLog(@"_>_>_>_>_>_>_>_>_>_>_>_>_>_>_>_>_>_>_>_>_>_timeSinceLastUpdate: %f POSITIVE OR NEGATIVE", timeSinceLastUpdate);
+            NSTimeInterval tenMinutesInSeconds = 600;
+            
+                if (managedSelectedCity.updated == NO || timeSinceLastUpdate > tenMinutesInSeconds) {
+                
+                    NSInteger cityID = managedSelectedCity.cityID;
+            
+                    //API client calls and returns weather dictionary for each city then builds cityWithWeather object.
+                    [APIClient getWeatherForCityID:cityID WithCompletionBlock:^(NSDictionary *responseDictionary, NSError *error) {
+                
+                        if (!responseDictionary) {
+                            // pass error through.
+                            NSLog(@"sharedDataStore error: error passed through from API: %@", error);
+                    
+                            managedSelectedCity.updateLastAttempt = [NSDate date];
+                            NSLog(@"didn't get a responseDictionary from API call and set an updateAttemptTime for managedSelecetedCity: %@", managedSelectedCity.cityName);
+
+                            [self saveContext];
+                            completionBlock(nil, error);
+                        }
+                
+                        else {
+                            //update selected city's weather data from responseDictionary
+                            managedSelectedCity.tempInCelsius = [NSString stringWithFormat:@"%.0f°C",roundf([responseDictionary[@"main"][@"temp"] floatValue] -273.15)];
+                            managedSelectedCity.tempInFahrenheit = [NSString stringWithFormat:@"%.0f°F", roundf((1.8*([responseDictionary[@"main"][@"temp"] floatValue]-273))+32) ];
+                            managedSelectedCity.weatherDescription = responseDictionary[@"weather"][0][@"description"];
+                    
+                            managedSelectedCity.tempHighInCelsius = [NSString stringWithFormat:@"%.0f°C", roundf([responseDictionary[@"main"][@"temp_max"] floatValue] -273.15)];
+                            managedSelectedCity.tempHighInFahrenheit = [NSString stringWithFormat:@"%.0f°F", roundf((1.8*([responseDictionary[@"main"][@"temp_max"] floatValue]-273))+32)];
+                            managedSelectedCity.tempLowInCelsius = [NSString stringWithFormat:@"%.0f°C",   round([responseDictionary[@"main"][@"temp_min"] floatValue] -273.15)];
+                            managedSelectedCity.tempLowInFahrenheit = [NSString stringWithFormat:@"%.0f°F", roundf((1.8*([responseDictionary[@"main"][@"temp_min"] floatValue]-273))+32)];
+                    
+                            managedSelectedCity.humidity =[NSString stringWithFormat:@"%@%%", responseDictionary[@"main"][@"humidity"]];
+                            managedSelectedCity.atmosphericPressure = [NSString stringWithFormat:@"%@hPa", responseDictionary[@"main"][@"pressure"]];
+                            managedSelectedCity.windSpeedMPH = [NSString stringWithFormat:@"%.1fmph", ([responseDictionary[@"wind"][@"speed"]floatValue] * 2.236936)];
+                            managedSelectedCity.windSpeedKPH = [NSString stringWithFormat:@"%.1fkm/h", ([responseDictionary[@"wind"][@"speed"]floatValue] * 3.6)];
+                            managedSelectedCity.iconID = [NSString stringWithFormat:@"%@", responseDictionary[@"weather"][0][@"icon"]];
+                    
+                    
+                    
+                            NSLog(@"updatedCityWeatherWindSpeedMPH: %@", managedSelectedCity.windSpeedMPH);
+                            NSLog(@"newCity's selected city.update %d", managedSelectedCity.updated);
+                    
+                            managedSelectedCity.updated = YES;
+                            managedSelectedCity.updateLastAttempt = [NSDate date];
+                            NSLog(@"newCity's selected city.update %d", managedSelectedCity.updated);
+                    
+                            [self saveContext];
+
+                    
+                        }
+                    }];
+                }
+                else {
+                    NSLog(@"This City doesn't need updating.");
+            }
+        }
     }
-    return self;
+    NSLog(@"+++++++++++++++++ABOUT TO CALL THE COMPLETION BLOCK+++++++++++++++++++");
+    completionBlock(YES, nil);
 }
 
--(void)getWeatherWithCompletion:(void (^)(BOOL success, NSError *error))completionBlock {
-
+-(void)getWeatherForSelectedCity:(SelectedCity *)selectedCity withCompletion:(void (^)(BOOL success, NSError *error))completionBlock {
     
-    if(self.selectedCitiesArray.count != 0) {
         
-        [self.citiesWithWeatherArray removeAllObjects];
+    NSFetchRequest *updateFetch = [NSFetchRequest fetchRequestWithEntityName:@"SelectedCity"];
+    updateFetch.predicate = [NSPredicate predicateWithFormat:@"cityID= %ld",selectedCity.cityID];
+    NSArray *fetchArray = [self.managedObjectContext executeFetchRequest: updateFetch error: nil];
         
-        for (SelectedCity *selectedCity in self.selectedCitiesArray) {
+    for(SelectedCity *managedSelectedCity in fetchArray) {
             
-            NSLog(@"selectedCity in datastore: %@", selectedCity);
+        NSTimeInterval timeSinceLastUpdate = [[NSDate date] timeIntervalSinceDate:managedSelectedCity.updateLastAttempt];
+        NSLog(@">_>_>_>_>_>_>_>_>_>_>_>_>_>_timeSinceLastUpdate: %f POSITIVE OR NEGATIVE", timeSinceLastUpdate);
+        NSTimeInterval tenMinutesInSeconds = 600;
             
-            
-            NSInteger cityID = selectedCity.cityID;
-       
-            //API client calls and returns weather dictionary for each city then builds cityWithWeather object.
-            
-            [APIClient getWeatherForCityID:cityID WithCompletionBlock:^(NSDictionary *responseDictionary, NSError *error) {
+        if (managedSelectedCity.updated == NO || timeSinceLastUpdate > tenMinutesInSeconds) {
                 
+            NSInteger cityID = managedSelectedCity.cityID;
+                
+            //API client calls and returns weather dictionary for each city then builds cityWithWeather object.
+            [APIClient getWeatherForCityID:cityID WithCompletionBlock:^(NSDictionary *responseDictionary, NSError *error) {
+                    
                 if (!responseDictionary) {
                     // pass error through.
-                    completionBlock(NO, error);
+                    NSLog(@"sharedDataStore error: error passed through from API: %@", error);
+                        
+                    managedSelectedCity.updateLastAttempt = [NSDate date];
+                    NSLog(@"didn't get a responseDictionary from API call and set an updateAttemptTime for managedSelecetedCity: %@", managedSelectedCity.cityName);
+                        
+                    [self saveContext];
+                    NSLog(@"++++++++++ABOUT TO CALL THE COMPLETION BLOCK (nil, error)+++++++++++++++++++");
+                    completionBlock(nil, error);
+                    }
                     
-                }
-                
                 else {
-                //build cityWithWeatherObjects
-                
-                CityWithWeather *newCity = [[CityWithWeather alloc]init];
-                newCity.cityID = responseDictionary[@"id"];
-                newCity.cityName = responseDictionary[@"name"];
-                newCity.countryAbreviation = responseDictionary[@"sys"][@"country"];
-                newCity.dateSelected = selectedCity.dateSelected;
-                NSLog(@"newCity.dateSelected: %f", newCity.dateSelected);
-                NSLog(@"selectedCity.dateSelected: %f", selectedCity.dateSelected);
-                
-                newCity.tempInCelsius = [NSString stringWithFormat:@"%.0f°C",roundf([responseDictionary[@"main"][@"temp"] floatValue] -273.15)];
-                newCity.tempInFahrenheit = [NSString stringWithFormat:@"%.0f°F", roundf((1.8*([responseDictionary[@"main"][@"temp"] floatValue]-273))+32) ];
-                newCity.weatherDescription = responseDictionary[@"weather"][0][@"description"];
-               
-                newCity.tempHighInCelsius = [NSString stringWithFormat:@"%.0f°C", roundf([responseDictionary[@"main"][@"temp_max"] floatValue] -273.15)];
-                newCity.tempHighInFahrenheit = [NSString stringWithFormat:@"%.0f°F", roundf((1.8*([responseDictionary[@"main"][@"temp_max"] floatValue]-273))+32)];
-                newCity.tempLowInCelsius = [NSString stringWithFormat:@"%.0f°C", roundf([responseDictionary[@"main"][@"temp_min"] floatValue] -273.15)];
-                newCity.tempLowInFahrenheit = [NSString stringWithFormat:@"%.0f°F", roundf((1.8*([responseDictionary[@"main"][@"temp_min"] floatValue]-273))+32)];
-                
-                newCity.humidity =[NSString stringWithFormat:@"%@%%", responseDictionary[@"main"][@"humidity"]];
-                newCity.atmosphericPressure = [NSString stringWithFormat:@"%@hPa", responseDictionary[@"main"][@"pressure"]];
-                newCity.windSpeedMPH = [NSString stringWithFormat:@"%.1fmph", ([responseDictionary[@"wind"][@"speed"]floatValue] * 2.236936)];
-                newCity.windSpeedKPH = [NSString stringWithFormat:@"%.1fkm/h", ([responseDictionary[@"wind"][@"speed"]floatValue] * 3.6)];
-                newCity.iconID = responseDictionary[@"weather"][0][@"icon"];
-                
-                NSLog(@"newCity: %@", newCity);
-                
-                
-                [self.citiesWithWeatherArray addObject: newCity];
-         
-                //check if all cities have response dictionary with weather
-                if (self.selectedCitiesArray.count == self.citiesWithWeatherArray.count && self.selectedCitiesArray.count > 0) {
-                        completionBlock(YES, nil);
-                }
-                }
+                    //update selected city's weather data from responseDictionary
+                    managedSelectedCity.tempInCelsius = [NSString stringWithFormat:@"%.0f°C",roundf([responseDictionary[@"main"][@"temp"] floatValue] -273.15)];
+                    managedSelectedCity.tempInFahrenheit = [NSString stringWithFormat:@"%.0f°F", roundf((1.8*([responseDictionary[@"main"][@"temp"] floatValue]-273))+32) ];
+                    managedSelectedCity.weatherDescription = responseDictionary[@"weather"][0][@"description"];
+                        
+                    managedSelectedCity.tempHighInCelsius = [NSString stringWithFormat:@"%.0f°C", roundf([responseDictionary[@"main"][@"temp_max"] floatValue] -273.15)];
+                    managedSelectedCity.tempHighInFahrenheit = [NSString stringWithFormat:@"%.0f°F", roundf((1.8*([responseDictionary[@"main"][@"temp_max"] floatValue]-273))+32)];
+                    managedSelectedCity.tempLowInCelsius = [NSString stringWithFormat:@"%.0f°C",   round([responseDictionary[@"main"][@"temp_min"] floatValue] -273.15)];
+                    managedSelectedCity.tempLowInFahrenheit = [NSString stringWithFormat:@"%.0f°F", roundf((1.8*([responseDictionary[@"main"][@"temp_min"] floatValue]-273))+32)];
+                    
+                    managedSelectedCity.humidity =[NSString stringWithFormat:@"%@%%", responseDictionary[@"main"][@"humidity"]];
+                    managedSelectedCity.atmosphericPressure = [NSString stringWithFormat:@"%@hPa", responseDictionary[@"main"][@"pressure"]];
+                    managedSelectedCity.windSpeedMPH = [NSString stringWithFormat:@"%.1fmph", ([responseDictionary[@"wind"][@"speed"]floatValue] * 2.236936)];
+                    managedSelectedCity.windSpeedKPH = [NSString stringWithFormat:@"%.1fkm/h", ([responseDictionary[@"wind"][@"speed"]floatValue] * 3.6)];
+                    managedSelectedCity.iconID = [NSString stringWithFormat:@"%@", responseDictionary[@"weather"][0][@"icon"]];
+                        
+                    managedSelectedCity.updated = YES;
+                    managedSelectedCity.updateLastAttempt = [NSDate date];
+                        
+                    [self saveContext];
+                        
+                    NSLog(@"++++++++++ABOUT TO CALL THE COMPLETION BLOCK (YES, nil)+++++++++++++++++++");
+                    completionBlock(YES, nil);
+                    }
             }];
+        }
+        else {
+                NSLog(@"This City doesn't need updating.");
+                NSLog(@"+++++++++++++++++ABOUT TO CALL THE COMPLETION BLOCK (nil, nil)+++++++++++++++++++");
+                completionBlock(YES, nil);
         }
     }
 }
+
+//for (NSInteger i =0 ; i<self.selectedCitiesArray.count; i++) {
+//    
+//    SelectedCity *selectedCity = self.selectedCitiesArray[i];
+//    
+
+
+
+
+
+//CURRENTLY NOT BEING USED. SECOND API CALL CAUSING TIMING ISSUES//
+//-(void)addIconToCitiesWithWeatherWithCompletion:(void(^)(BOOL success))completionBlock {
+//    
+//    for(CityWithWeather *cityWithWeather in self.citiesWithWeatherArray) {
+//        
+//        //api call to get icon
+//        [APIClient getIconImageForIconID: cityWithWeather.iconID withCompletionBlock:^(UIImage *iconImage, NSError *error) {
+//             
+//            if (!iconImage){
+//                //handle that big mama nasty error
+//                cityWithWeather.iconImage = nil;
+//                
+//            }
+//            
+//            else {
+//            cityWithWeather.iconImage = iconImage;
+//            NSLog(@"Got an Image!");
+//            }
+//        }];
+//    }
+//    completionBlock(YES);
+//}
+
 
 
 -(void)deleteSelectedCityWithID:(NSInteger)cityID {

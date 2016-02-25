@@ -28,6 +28,13 @@
     // set up text field behaviors
     [self.cityTextField becomeFirstResponder];
     self.cityTextField.delegate = self;
+    
+    
+    self.navigationItem.title = @"Add Cities";
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
+                                                  forBarMetrics:UIBarMetricsDefault];
+    self.navigationController.navigationBar.shadowImage = [UIImage new];
+    self.navigationController.navigationBar.translucent = YES;
 
     
 }
@@ -116,15 +123,9 @@
         newCity.cityID = [possibleCitiesArray[0][@"_id"] integerValue];
         newCity.lat = [possibleCitiesArray[0][@"coord"][@"lat"] floatValue];
         newCity.lon = [possibleCitiesArray[0][@"coord"][@"lon"] floatValue];
-
-        // set up timeInterval from date since core data requires NSTimeInterval.
-        NSDate *referenceDate = [NSDate dateWithTimeIntervalSince1970:0];
-        NSLog(@"referenceDate: %@", referenceDate);
-        NSDate *date = [NSDate date];
-        NSLog(@"today's date: %@", date);
-        NSTimeInterval timeInterval = [date timeIntervalSinceDate:referenceDate];
-        NSLog(@"%f", timeInterval);
-        newCity.dateSelected = timeInterval;
+        newCity.updated = nil;
+        newCity.dateSelected = [NSDate date];
+        
         
         NSLog(@"NOT IN THE MAP: IS THIS GETTING SAVED!!!!! %@", newCity);
         

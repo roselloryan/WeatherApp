@@ -7,10 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CityWithWeather.h"
+#import "SelectedCity.h"
 
 @interface DetailWeatherVIewControllerViewController : UIViewController
 
-@property (strong, nonatomic) CityWithWeather *cityWithWeather;
+@property (strong, nonatomic) SelectedCity *selectedCity;
 
 @end
