@@ -1,10 +1,6 @@
 //
 //  ExtensionAPIClient.m
-//  Weather App
-//
-//  Created by RYAN ROSELLO on 1/21/16.
-//  Copyright © 2016 RYAN ROSELLO. All rights reserved.
-//
+
 
 #import "ExtensionAPIClient.h"
 
@@ -25,8 +21,8 @@
     
     NSURLSessionDataTask *dataTask = [session dataTaskWithURL: url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
-        if(!dataTask) {
-            NSLog(@"Error in API Client dataTask: error: %@ \n localizedDescription: %@", error, error.localizedDescription);
+        if(!data) {
+            NSLog(@"Error in API Client data: error: %@ \n localizedDescription: %@", error, error.localizedDescription);
         }
         
         // do something with response
@@ -58,7 +54,7 @@
     
     NSURLSessionDataTask *dataTask = [session dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
-        if(!dataTask) {
+        if(!data) {
             NSLog(@"Error in API Client IconImage dataTask: %@", error);
         }
         
@@ -67,8 +63,6 @@
         if(!dataResponse) {
             NSLog(@"error in dataResponse. Error: %@ \nError.localizedDiscription: %@",error, error.localizedDescription);
         }
-        
-        NSLog(@"dataResponse: %@", dataResponse);
         
         UIImage *iconImage = [UIImage imageWithData:dataResponse];
         

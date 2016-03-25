@@ -1,19 +1,20 @@
 //
 //  AddCityViewController.m
-//  Weather App
-//
-//  Created by RYAN ROSELLO on 1/5/16.
-//  Copyright © 2016 RYAN ROSELLO. All rights reserved.
-//
+
 
 #import "AddCityViewController.h"
 #import "WeatherAppDataStore.h"
 #import "PossibleCity.h"
 #import "SelectCityMapViewController.h"
+#import "WeatherStyleKit.h"
 
 @interface AddCityViewController () <UITextFieldDelegate>
 
+@property (weak, nonatomic) IBOutlet UIImageView *backgroundImageView;
+
 @property (weak, nonatomic) IBOutlet UITextField *cityTextField;
+
+@property (weak, nonatomic) IBOutlet UIButton *addCityButton;
 
 
 @end
@@ -23,6 +24,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    //set up background image
+    self.view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.8];
+    self.backgroundImageView.backgroundColor = [UIColor clearColor];
     self.possibleCitiesArrayOfMKAnnotations = [[NSMutableArray alloc]init];
     
     // set up text field behaviors
@@ -30,12 +34,19 @@
     self.cityTextField.delegate = self;
     
     
-    self.navigationItem.title = @"Add Cities";
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
-                                                  forBarMetrics:UIBarMetricsDefault];
+    // set appearance of navigationBar
+    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] init];
+    barButton.title = @"Back";
+    self.navigationController.navigationBar.topItem.backBarButtonItem = barButton;
+    
+    [self.navigationController.navigationBar setBackgroundImage: [UIImage new]  forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.shadowImage = [UIImage new];
     self.navigationController.navigationBar.translucent = YES;
 
+    //setup addCity button appearance
+    self.addCityButton.layer.cornerRadius = 5;
+    self.addCityButton.layer.borderWidth = 1;
+    self.addCityButton.layer.borderColor = self.view.tintColor.CGColor;
     
 }
 
@@ -44,14 +55,18 @@
 
 - (IBAction)addCityButtonTapped:(UIButton *)sender {
     
-    [self checkForCityMatchAndSave];
-    [self.navigationController popViewControllerAnimated:YES];
-    
-    
+    if ([self.cityTextField.text isEqualToString:@""]) {
+        
+        UIAlertController *noTextEnteredAlert = [UIAlertController alertControllerWithTitle:@"No Text Entered" message:@"Please enter a city name to search" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleCancel handler:nil];
+        [noTextEnteredAlert addAction:okAction];
+        [self presentViewController:noTextEnteredAlert animated:YES completion:nil];
+    }
+    else {
+        [self checkForCityMatchAndSave];
+//        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
-
-
-
 
 #pragma mark - Navigation
 
@@ -69,8 +84,18 @@
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField {
     
-    [self checkForCityMatchAndSave];
     
+    if ([self.cityTextField.text isEqualToString:@""]) {
+        
+        UIAlertController *noTextEnteredAlert = [UIAlertController alertControllerWithTitle:@"No Text Entered" message:@"Please enter a city name to search" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleCancel handler:nil];
+        [noTextEnteredAlert addAction:okAction];
+        [self presentViewController:noTextEnteredAlert animated:YES completion:nil];
+    }
+
+    else {
+        [self checkForCityMatchAndSave];
+    }
     return YES;
 }
 
@@ -98,6 +123,7 @@
         for(NSDictionary *cityDictionary in possibleCitiesArray) {
             
             NSString *cityNameAndCountry = [NSString stringWithFormat:@"%@, %@", cityDictionary[@"name"],cityDictionary[@"country"]];
+            
             CLLocationCoordinate2D newCityCoordinate = CLLocationCoordinate2DMake([cityDictionary[@"coord"][@"lat"] floatValue], [cityDictionary[@"coord"][@"lon"] floatValue]);
             
             PossibleCity *newCity = [[PossibleCity alloc]initWithCoordinate:newCityCoordinate andTitle:cityNameAndCountry];
@@ -108,6 +134,7 @@
         
         //segue to SelectCityMapViewController'
         [self performSegueWithIdentifier:@"selectCityFromMapSegue" sender:nil];
+        
         NSLog(@"possibleCitiesArrayOfMKAnnotations: %@", self.possibleCitiesArrayOfMKAnnotations);
         
     }
@@ -124,7 +151,7 @@
         newCity.lat = [possibleCitiesArray[0][@"coord"][@"lat"] floatValue];
         newCity.lon = [possibleCitiesArray[0][@"coord"][@"lon"] floatValue];
         newCity.updated = nil;
-        newCity.dateSelected = [NSDate date];
+        newCity.dateSelected = [NSDate date].timeIntervalSinceReferenceDate;
         
         
         NSLog(@"NOT IN THE MAP: IS THIS GETTING SAVED!!!!! %@", newCity);
@@ -137,7 +164,7 @@
     
     else {
         
-        UIAlertController *noMatchAlert = [UIAlertController alertControllerWithTitle:@"No Match" message:@"No Matching City Found \n Check Spelling and Try Again" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *noMatchAlert = [UIAlertController alertControllerWithTitle:@"No Match" message:@"No Matching City Found \n Please Check Spelling and Try Again" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleCancel handler:nil];
         [noMatchAlert addAction:okAction];
         [self presentViewController:noMatchAlert animated:YES completion:nil];
@@ -146,5 +173,6 @@
     NSLog(@"self.allCitiesArray.count: %lu", self.allCitiesArray.count);
     
 }
+
 
 @end

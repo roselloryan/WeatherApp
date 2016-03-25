@@ -1,18 +1,36 @@
+//
+// TodayViewController.m
+
 
 #import "TodayViewController.h"
 #import <NotificationCenter/NotificationCenter.h>
 #import <CoreLocation/CoreLocation.h>
 #import "UserCurrentLocation.h"
 #import "ExtensionAPIClient.h"
+#import "CurrentCityWeather.h"
 
 
 @interface TodayViewController () <NCWidgetProviding, CLLocationManagerDelegate>
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
-@property (strong, nonatomic) UserCurrentLocation *currentLocation;
+@property (strong, nonatomic) UserCurrentLocation *userCurrentLocation;
+
 @property (weak, nonatomic) IBOutlet UILabel *locationLabel;
+@property (strong, nonatomic) NSString *locationString;
+
 @property (weak, nonatomic) IBOutlet UIImageView *iconImageView;
+@property (strong, nonatomic) UIImage *iconImage;
+@property (strong, nonatomic) NSString *iconID;
+
 @property (weak, nonatomic) IBOutlet UILabel *tempLabel;
+@property (strong, nonatomic) NSString *tempString;
+
+@property (strong, nonatomic) CurrentCityWeather *currentCityWeather;
+
+
+
+
+@property (assign, nonatomic) BOOL didUpdateSinceViewDidLoad;
 
 @end
 
@@ -22,94 +40,83 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-//    //set up location manager and delegate
-//    self.locationManager = [[CLLocationManager alloc]init];
-//    self.locationManager.delegate = self;
-//    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-
-    NSLog(@"In Extension ViewDidLoad");
-}
-
--(void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
+    self.didUpdateSinceViewDidLoad = NO;
     // request auth for location service and startUpdating if allowed
     //set up location manager and delegate
+    
     self.locationManager = [[CLLocationManager alloc]init];
     self.locationManager.delegate = self;
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     [self.locationManager requestWhenInUseAuthorization];
     [self.locationManager startUpdatingLocation];
-    
-    NSLog(@"In viewWillAppear");
+
 }
 
 
 #pragma mark - CLLocationManagerDelegate Methods
 
 -(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
-    NSLog(@"Error: %@", error);
+    NSLog(@"LocactionManager Error: %@", error);
 }
 
 
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations{
-    NSLog(@"%@", locations);
-    NSLog(@"Last CLLocation object in array: %@", [locations lastObject]);
+
     CLLocation *currentLocation =[locations lastObject];
     
-    if(locations != nil) {
+    if(locations) {
+        
+        // self.userCurrentLocation to be used for widgetbackground updates in future
+        self.userCurrentLocation.coordinate = CLLocationCoordinate2DMake(currentLocation.coordinate.latitude, currentLocation.coordinate.longitude);
+        
         NSLog(@"LAT: %@", [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude]);
         NSLog(@"LON: %@", [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude]);
         
         [ExtensionAPIClient getWeatherForCurrentLocation:currentLocation withCompletionBlock:^(NSDictionary *responseDictionary) {
             
-            [ExtensionAPIClient getIconImageForIconID:responseDictionary[@"weather"][0][@"icon"] withCompletionBlock:^(UIImage *iconImage) {
-                //stuff
-                
-            }];
+            CurrentCityWeather *currentCityWeather = [[CurrentCityWeather alloc]initWithResponseDictionary:responseDictionary];
+            self.currentCityWeather = currentCityWeather;
             
-            // update today extension labels
-            // get back on main thread to avoid error about updating from background thread.
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.locationLabel.text = responseDictionary[@"name"];
-                CGFloat tempInCelsius = [responseDictionary[@"main"][@"temp"] floatValue] -273.15;
-                CGFloat tempInFahrenheit = (tempInCelsius * 9/5) + 32;
-                NSString *tempString = [NSString stringWithFormat:@"%.0f°C / %.0f°F", roundf(tempInCelsius), roundf(tempInFahrenheit)];
-                self.tempLabel.text = tempString;
-            });
+            [ExtensionAPIClient getIconImageForIconID:self.currentCityWeather.iconID withCompletionBlock:^(UIImage *iconImage) {
+               
+                self.currentCityWeather.iconImage = iconImage;
+                
+                [self updateInfoOnMainThread];
+            }];
         }];
     }
+    
     [self.locationManager stopUpdatingLocation];
 }
+
+-(void)updateInfoOnMainThread {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        self.iconImageView.image = self.currentCityWeather.iconImage;
+        self.locationLabel.text = self.currentCityWeather.cityName;
+        self.tempLabel.text = self.currentCityWeather.tempInCelsiusAndFahrenheit;
+    });
+}
+
+//-(void)widgetPerformUpdateWithCompletionHandler:(void (^)(NCUpdateResult result))completionHandler {
+//
+// use lastUpdateAttempt to test for if call should be made or undate successful???
+//
+////    [ExtensionAPIClient getWeatherForCurrentLocation:(CLLocation *) withCompletionBlock:^(NSDictionary *responseDictionary) {
+////        // stuff
+////    }]
+//    
+//}
+
 
 //removes bottom padding.
 -(UIEdgeInsets)widgetMarginInsetsForProposedMarginInsets:(UIEdgeInsets)defaultMarginInsets {
     
-    UIEdgeInsets insetsToRemoveBottomPadding = UIEdgeInsetsMake(defaultMarginInsets.top, defaultMarginInsets.left, 0,defaultMarginInsets.right );
-    
+    NSLog(@"WHEN IS THIS CALLED?????????????before?????????????????");
+    UIEdgeInsets insetsToRemoveBottomPadding = UIEdgeInsetsMake(defaultMarginInsets.top, defaultMarginInsets.left, 0, defaultMarginInsets.left );
+    NSLog(@"WHEN IS THIS CALLED??????????????after????????????????");
     return insetsToRemoveBottomPadding;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-//- (void)widgetPerformUpdateWithCompletionHandler:(void (^)(NCUpdateResult))completionHandler {
-//    // Perform any setup necessary in order to update the view.
-//    
-//        NSLog(@"Whathe?");
-//    
-//    
-//    if(NCUpdateResultFailed) {
-//        NSLog(@"Something Else?");
-//    }
-//    // If an error is encountered, use NCUpdateResultFailed
-//    // If there's no update required, use NCUpdateResultNoData
-//    // If there's an update, use NCUpdateResultNewData
-//
-//    completionHandler(NCUpdateResultNewData);
-//}
 
 @end

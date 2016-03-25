@@ -1,4 +1,4 @@
-
+//
 //  WeatherAppDataStore.h
 
 
@@ -15,8 +15,6 @@
 
 
 + (instancetype)sharedWeatherAppDataStore;
-
--(void)getWeatherWithCompletion:(void (^)(BOOL success, NSError *error))completionBlock;
 
 -(void)getWeatherForSelectedCity:(SelectedCity *)selectedCity withCompletion:(void (^)(BOOL success, NSError *error))completionBlock;
     
