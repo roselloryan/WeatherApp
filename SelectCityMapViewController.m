@@ -9,6 +9,7 @@
 
 @interface SelectCityMapViewController () <MKMapViewDelegate, UIGestureRecognizerDelegate>
 
+
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (weak, nonatomic) IBOutlet UILabel *topLabel;
 @property (strong, nonatomic) IBOutlet UITapGestureRecognizer *pinTapGestureRecognizer;
@@ -29,6 +30,7 @@
     [self.view sendSubviewToBack: self.mapView];
     
     [self.mapView removeAnnotations: self.mapView.annotations];
+    
     [self.mapView addAnnotations: self.possibleCitiesArrayOfMKAnnotations];
     
     self.pinTapGestureRecognizer.delegate = self;
@@ -89,8 +91,6 @@
 
 
 - (IBAction)tapGestureRecognized:(UITapGestureRecognizer *)sender {
-
-    NSLog(@"Tap Sender: %@", sender);
     
     // cast view.annotation to get citydictionary back
     // this gave me some trouble
@@ -99,10 +99,21 @@
         for (PossibleCity *possibleCity in self.mapView.selectedAnnotations) {
             
             NSDictionary *cityDict = possibleCity.cityDictionary;
+            
+            WeatherAppDataStore *sharedDataStore = [WeatherAppDataStore sharedWeatherAppDataStore];
+            
+            // check if trying to save duplicate city
+            if ([sharedDataStore checkForDuplicateCityID:[cityDict[@"_id"] integerValue]]) {
+                
+                NSLog(@"=========FOUND A DUPLICATE IN MAP VC================");
+                
+                [self performSegueWithIdentifier:@"unwindSegue" sender:self];
+                return;
+            };
+            
     
             //save selected city to Core Data
-    
-            WeatherAppDataStore *sharedDataStore = [WeatherAppDataStore sharedWeatherAppDataStore];
+
             SelectedCity *newCity = [NSEntityDescription insertNewObjectForEntityForName:@"SelectedCity"inManagedObjectContext:sharedDataStore.managedObjectContext];
             newCity.cityID = [cityDict[@"_id"] integerValue];
             newCity.cityName = cityDict[@"name"];
@@ -111,11 +122,8 @@
             newCity.lon = [cityDict[@"coord"][@"lon"] floatValue];
             newCity.updated = NO;
             newCity.dateSelected = [NSDate date].timeIntervalSinceReferenceDate;
-        
-            NSLog(@"SAVE IS ABOUT TO BE CALLED WITH CITY: %@", newCity);
     
             [sharedDataStore saveContext];
-    
     
             [self performSegueWithIdentifier:@"unwindSegue" sender:self];
         }
@@ -125,9 +133,7 @@
 
 -(void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
     
-    NSLog(@"Are we in here?!?!");
     // cast view.annotation to get citydictionary back
-    
     PossibleCity *possibleCity = (PossibleCity *)view.annotation;
     
     NSDictionary *cityDict = possibleCity.cityDictionary;
@@ -145,7 +151,7 @@
     newCity.dateSelected = [NSDate date].timeIntervalSinceReferenceDate;
     
     [sharedDataStore saveContext];
-
+    
     [self performSegueWithIdentifier:@"unwindSegue" sender:self];
 }
 

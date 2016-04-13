@@ -10,7 +10,7 @@
 #import "CurrentCityWeather.h"
 
 
-@interface TodayViewController () <NCWidgetProviding, CLLocationManagerDelegate>
+@interface TodayViewController () <NCWidgetProviding, CLLocationManagerDelegate, UIGestureRecognizerDelegate>
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) UserCurrentLocation *userCurrentLocation;
@@ -19,18 +19,15 @@
 @property (strong, nonatomic) NSString *locationString;
 
 @property (weak, nonatomic) IBOutlet UIImageView *iconImageView;
-@property (strong, nonatomic) UIImage *iconImage;
 @property (strong, nonatomic) NSString *iconID;
 
 @property (weak, nonatomic) IBOutlet UILabel *tempLabel;
 @property (strong, nonatomic) NSString *tempString;
 
+@property (strong, nonatomic) UILabel *clearLabel;
+
 @property (strong, nonatomic) CurrentCityWeather *currentCityWeather;
 
-
-
-
-@property (assign, nonatomic) BOOL didUpdateSinceViewDidLoad;
 
 @end
 
@@ -40,7 +37,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.didUpdateSinceViewDidLoad = NO;
+    
     // request auth for location service and startUpdating if allowed
     //set up location manager and delegate
     
@@ -49,7 +46,28 @@
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     [self.locationManager requestWhenInUseAuthorization];
     [self.locationManager startUpdatingLocation];
+    
+    
+    //build tap gesture recognizer to open app
+    self.clearLabel = [[UILabel alloc]initWithFrame: self.view.bounds];
+    self.clearLabel.userInteractionEnabled = YES;
+    self.clearLabel.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:self.clearLabel];
+    [self.view bringSubviewToFront:self.clearLabel];
+    
+    // add tapGestureRecognizer to open app
+    UITapGestureRecognizer *openTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(launchHostingApp:)];
+    [self.clearLabel addGestureRecognizer:openTapGestureRecognizer];
+}
 
+
+- (IBAction)launchHostingApp:(UIGestureRecognizer *)sender {
+    
+    if (sender.state == UIGestureRecognizerStateEnded) {
+        
+        NSURL *openURL = [NSURL URLWithString:@"RARWeatherApp://com.RAR.CelsiusAndFahrenheit"];
+        [self.extensionContext openURL:openURL completionHandler:nil];
+    }
 }
 
 
@@ -67,46 +85,47 @@
     if(locations) {
         
         // self.userCurrentLocation to be used for widgetbackground updates in future
-        self.userCurrentLocation.coordinate = CLLocationCoordinate2DMake(currentLocation.coordinate.latitude, currentLocation.coordinate.longitude);
-        
-        NSLog(@"LAT: %@", [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.latitude]);
-        NSLog(@"LON: %@", [NSString stringWithFormat:@"%.8f", currentLocation.coordinate.longitude]);
+        //        self.userCurrentLocation.coordinate = CLLocationCoordinate2DMake(currentLocation.coordinate.latitude, currentLocation.coordinate.longitude);
         
         [ExtensionAPIClient getWeatherForCurrentLocation:currentLocation withCompletionBlock:^(NSDictionary *responseDictionary) {
+            
+            NSLog(@"response dictionary: %@", responseDictionary);
+            
+            // check for nil dictionary
+            if (!responseDictionary) {
+                
+                NSLog(@"In NIL check!!!! response dictionary: %@", responseDictionary);
+                self.clearLabel.textColor = [[UIColor lightGrayColor]colorWithAlphaComponent:0.6];
+                self.clearLabel.text = @"      What's the temperature like outside?";
+                [self.locationManager stopUpdatingLocation];
+                
+                return  ;
+            }
             
             CurrentCityWeather *currentCityWeather = [[CurrentCityWeather alloc]initWithResponseDictionary:responseDictionary];
             self.currentCityWeather = currentCityWeather;
             
             [ExtensionAPIClient getIconImageForIconID:self.currentCityWeather.iconID withCompletionBlock:^(UIImage *iconImage) {
-               
+                    
                 self.currentCityWeather.iconImage = iconImage;
                 
-                [self updateInfoOnMainThread];
+                [self updateLabelsOnMainThread];
             }];
         }];
     }
-    
     [self.locationManager stopUpdatingLocation];
 }
 
--(void)updateInfoOnMainThread {
+
+-(void)updateLabelsOnMainThread {
     dispatch_async(dispatch_get_main_queue(), ^{
         
+        self.clearLabel.text = @"";
         self.iconImageView.image = self.currentCityWeather.iconImage;
         self.locationLabel.text = self.currentCityWeather.cityName;
         self.tempLabel.text = self.currentCityWeather.tempInCelsiusAndFahrenheit;
     });
 }
-
-//-(void)widgetPerformUpdateWithCompletionHandler:(void (^)(NCUpdateResult result))completionHandler {
-//
-// use lastUpdateAttempt to test for if call should be made or undate successful???
-//
-////    [ExtensionAPIClient getWeatherForCurrentLocation:(CLLocation *) withCompletionBlock:^(NSDictionary *responseDictionary) {
-////        // stuff
-////    }]
-//    
-//}
 
 
 //removes bottom padding.
@@ -115,6 +134,9 @@
     NSLog(@"WHEN IS THIS CALLED?????????????before?????????????????");
     UIEdgeInsets insetsToRemoveBottomPadding = UIEdgeInsetsMake(defaultMarginInsets.top, defaultMarginInsets.left, 0, defaultMarginInsets.left );
     NSLog(@"WHEN IS THIS CALLED??????????????after????????????????");
+
+    [self.view bringSubviewToFront:self.clearLabel];
+    
     return insetsToRemoveBottomPadding;
 }
 

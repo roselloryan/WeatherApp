@@ -23,6 +23,7 @@
         
         if(!data) {
             NSLog(@"Error in API Client data: error: %@ \n localizedDescription: %@", error, error.localizedDescription);
+            return;
         }
         
         // do something with response

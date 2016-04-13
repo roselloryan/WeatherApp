@@ -8,7 +8,9 @@
 #import "SelectedCity.h"
 #import "WeatherStyleKit.h"
 
+
 @implementation WeatherAppDataStore
+
 
 + (instancetype)sharedWeatherAppDataStore {
     static WeatherAppDataStore *_sharedWeatherAppDataStore = nil;
@@ -29,19 +31,16 @@
     updateFetch.predicate = [NSPredicate predicateWithFormat:@"cityID= %ld",selectedCity.cityID];
     NSArray *fetchArray = [self.managedObjectContext executeFetchRequest: updateFetch error: nil];
 
-    for(SelectedCity *managedSelectedCity in fetchArray) {
-        
-        NSTimeInterval timeSinceLastUpdate = ([NSDate date].timeIntervalSinceReferenceDate - managedSelectedCity.updateLastAttempt);
-        
-        NSLog(@">_>_>_>_timeSinceLastUpdate: %f ", timeSinceLastUpdate);
-        NSTimeInterval tenMinutesInSeconds = 600;
-        
-
+    SelectedCity *managedSelectedCity = fetchArray[0];
+    
+    // check last update time
+    NSTimeInterval timeSinceLastUpdate = ([NSDate date].timeIntervalSinceReferenceDate - managedSelectedCity.updateLastAttempt);
+    NSTimeInterval tenMinutesInSeconds = 600;
+    
             
         if (managedSelectedCity.updated == NO || timeSinceLastUpdate > tenMinutesInSeconds) {
             
             NSInteger cityID = managedSelectedCity.cityID;
-            NSLog(@"%@",@(managedSelectedCity.cityID));
             
             //API client calls and returns weather dictionary for each city then builds cityWithWeather object.
             [APIClient getWeatherForCityID:cityID withCompletionBlock:^(NSDictionary *responseDictionary, NSError *error) {
@@ -50,20 +49,12 @@
                     // pass error through.
                     NSLog(@"sharedDataStore error: error passed through from API: %@", error);
 
-                    
                     NSDate *rightNow = [NSDate date];
-                    NSLog(@"%@", rightNow);
-                    NSLog(@"%f", rightNow.timeIntervalSinceReferenceDate);
-
                     
                     managedSelectedCity.updateLastAttempt = rightNow.timeIntervalSinceReferenceDate  ;
-                    NSLog(@"didn't get a responseDictionary from API call and set an updateAttemptTime for managedSelecetedCity: %@", managedSelectedCity.cityName);
-                        
-                    
-                    NSLog(@"%@", managedSelectedCity.cityName);
                     
                     [self saveContext];
-                    NSLog(@"++++++++++ABOUT TO CALL THE COMPLETION BLOCK (nil, error)++++++(ERROR)+++++");
+
                     NSLog(@"%@", error);
                     
                     completionBlock(nil, error);
@@ -83,18 +74,15 @@
                     managedSelectedCity.updateLastAttempt = [NSDate date].timeIntervalSinceReferenceDate;
                         
                     [self saveContext];
-                        
-                    NSLog(@"++CALL THE COMPLETION BLOCK (YES, nil) UPDATED WEATHER+++++");
+                    
                     completionBlock(YES, nil);
                     }
             }];
         }
         else {
-                NSLog(@"This City doesn't need updating.");
-                NSLog(@"+++++++++++++++++ABOUT TO CALL THE COMPLETION BLOCK (nil, nil)+++++++++++++++++++");
+                //This City doesn't need updating.
                 completionBlock(YES, nil);
         }
-    }
 }
 
 
@@ -124,14 +112,13 @@
 -(NSInteger)celsiusFromDegreesKelvin:(float)degreesKelvin {
     
     NSInteger degreesCelsius = lround(degreesKelvin - 273.15);
-    
     return degreesCelsius;
 }
+
 
 -(NSInteger)fahrenheitFromDegreesCelsius:(NSInteger)degreesCelsius {
     
     NSInteger degreesFahreheit = lround(degreesCelsius * 1.8 + 32);
-    
     return degreesFahreheit;
 }
 
@@ -140,8 +127,6 @@
     
     //update selected city's weather data from responseDictionary
     managedSelectedCity.tempInCelsius = [NSString stringWithFormat:@"%ld°C",[self celsiusFromDegreesKelvin:[responseDictionary[@"main"][@"temp"] floatValue]]];
-    
-    NSLog(@"&&managedSelectedCity.tempInCelsius: %@ &&",managedSelectedCity.tempInCelsius);
     
     managedSelectedCity.tempInFahrenheit = [NSString stringWithFormat:@"%ld°F", [self fahrenheitFromDegreesCelsius:[managedSelectedCity.tempInCelsius integerValue]]];
     
@@ -163,7 +148,9 @@
     managedSelectedCity.iconID = [NSString stringWithFormat:@"%@", responseDictionary[@"weather"][0][@"icon"]];
 }
 
+
 # pragma mark - method to draw the appropriate illustrations
+
 
 -(void)drawWeatherImageForIconID:(NSString *)iconID {
     // check for weather icon code to display image
@@ -273,7 +260,7 @@
         [WeatherStyleKit imageOfCanvas38];
     }
     else if ([iconID isEqualToString:@"50n"]) {
-//        clouds 13, moon 38, stars 37 fog 39, 40, 42, 43
+        
         [WeatherStyleKit imageOfCanvas13];
         [WeatherStyleKit imageOfCanvas37];
         [WeatherStyleKit imageOfCanvas38];
@@ -282,50 +269,24 @@
         [WeatherStyleKit imageOfCanvas42];
         [WeatherStyleKit imageOfCanvas43];
     }
-    // add screen for lack of icon code or no data?!?!
+    // screen for null icon code
     else {
         [WeatherStyleKit imageOfCanvas18];
     }
 }
 
 
-
-//CURRENTLY NOT BEING USED. SECOND API CALL CAUSING TIMING ISSUES//
-//-(void)addIconToCitiesWithWeatherWithCompletion:(void(^)(BOOL success))completionBlock {
-//    
-//    for(CityWithWeather *cityWithWeather in self.citiesWithWeatherArray) {
-//        
-//        //api call to get icon
-//        [APIClient getIconImageForIconID: cityWithWeather.iconID withCompletionBlock:^(UIImage *iconImage, NSError *error) {
-//             
-//            if (!iconImage){
-//                //handle that big mama nasty error
-//                cityWithWeather.iconImage = nil;
-//                
-//            }
-//            
-//            else {
-//            cityWithWeather.iconImage = iconImage;
-//            NSLog(@"Got an Image!");
-//            }
-//        }];
-//    }
-//    completionBlock(YES);
-//}
-
-
-
 # pragma mark - Core Data Stack
+
 
 // Returns the managed object context for the application.
 // If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
 
-- (NSManagedObjectContext *)managedObjectContext
-{
+- (NSManagedObjectContext *)managedObjectContext {
+    
     if (_managedObjectContext != nil) {
         return _managedObjectContext;
     }
-    
     
     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"selectedCitiesModel.sqlite"];
     
@@ -336,20 +297,20 @@
     NSPersistentStoreCoordinator *coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:managedObjectModel];
     
     [coordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error];
+    
     if (coordinator != nil) {
+        
         _managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
         [_managedObjectContext setPersistentStoreCoordinator:coordinator];
     }
+    
     return _managedObjectContext;
 }
 
 
-//!!! ADD Error Handling!!! ///
-
 -(void)fetchSelectedCities {
     
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"SelectedCity"];
-//    self.selectedCitiesArray = [self.managedObjectContext executeFetchRequest:fetchRequest error:nil];
 
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dateSelected" ascending:YES];
     NSArray *sortDescriptors = @[sortDescriptor];
@@ -357,12 +318,14 @@
     
     NSError *error;
     self.selectedCitiesArray = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    
     if (self.selectedCitiesArray == nil) {
         
         // Handle the error.
         NSLog(@"Error in fetch request: %@ \n%@ \n %@", error, error.description, error.localizedDescription);
     }
 }
+
 
 - (void)saveContext
 {
@@ -380,12 +343,13 @@
     }
 }
 
+
 -(void)deleteSelectedCityWithID:(NSInteger)cityID {
-    // PUT THIS IN THE DATASTORE!!!
+    
     NSFetchRequest *deleteFetch = [NSFetchRequest fetchRequestWithEntityName:@"SelectedCity"];
     
     deleteFetch.predicate = [NSPredicate predicateWithFormat:@"cityID= %ld",cityID];
-    NSLog(@"CityID: %ld", cityID);
+    NSLog(@"City to delete: CityID: %ld", cityID);
     
     NSArray *fetchArray = [self.managedObjectContext executeFetchRequest: deleteFetch error: nil];
     
@@ -394,9 +358,20 @@
         [self.managedObjectContext deleteObject:managedObject];
         [self saveContext];
         [self fetchSelectedCities];
-        
-        NSLog(@"---IN THE DELETE FOR LOOP IN DATASTORE NOW!!!---");
     }
+}
+
+
+-(BOOL)checkForDuplicateCityID:(NSInteger)cityID {
+    
+    for (SelectedCity *selectedCity in self.selectedCitiesArray) {
+        
+        if (selectedCity.cityID == cityID) {
+            return YES;
+            break;
+        }
+    }
+    return NO;
 }
 
 
@@ -407,11 +382,6 @@
      
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
-
-
-
-
-
 
 
 @end
