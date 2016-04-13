@@ -7,14 +7,14 @@ This is a weather app I built in objective-c to help in the morning. You see, my
 
 Here is an image that links to a demo video.
 
-[![Celsius And Fahrenheit](https://github.com/roselloryan/WeatherApp/blob/master/youTube%20screenshot.png)](https://www.youtube.com/watch?v=1eXrTiSk3pw)
+[![Celsius And Fahrenheit](https://github.com/roselloryan/roselloryan.github.io/blob/master/youTube%20screenshot.png)](https://www.youtube.com/watch?v=1eXrTiSk3pw)
 
 And some screenshots in case you don't want to visit youTube.
 
-![ScreenShot](https://github.com/roselloryan/roselloryan.github.io/blob/master/Screenshot6s1-350w.png)
-![ScreenShot](https://github.com/roselloryan/roselloryan.github.io/blob/master/Screenshot6s2-350w.png)
-![ScreenShot](https://github.com/roselloryan/roselloryan.github.io/blob/master/Screenshot6s3-350w.png)
-![ScreenShot](https://github.com/roselloryan/roselloryan.github.io/blob/master/Screenshot6s4-350w.png)
-![ScreenShot](https://github.com/roselloryan/roselloryan.github.io/blob/master/Screenshot6s5-350w.png)
+![ScreenShot](https://github.com/roselloryan/roselloryan.github.io/blob/master/Screenshot6s1-200w.png)
+![ScreenShot](https://github.com/roselloryan/roselloryan.github.io/blob/master/Screenshot6s2-200w.png)
+![ScreenShot](https://github.com/roselloryan/roselloryan.github.io/blob/master/Screenshot6s3-200w.png)
+![ScreenShot](https://github.com/roselloryan/roselloryan.github.io/blob/master/Screenshot6s4-200w.png)
+![ScreenShot](https://github.com/roselloryan/roselloryan.github.io/blob/master/Screenshot6s5-200w.png)
 
 copyright date: 2016 Ryan Rosello
