@@ -18,6 +18,7 @@
         // build and add blurEffect to tableViewCells
         UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
         UIVisualEffectView *visualEffectView = [[UIVisualEffectView alloc]initWithEffect:blurEffect];
+
         visualEffectView.frame = self.bounds;
         visualEffectView.layer.cornerRadius = 5.0f;
         visualEffectView.layer.masksToBounds = YES;

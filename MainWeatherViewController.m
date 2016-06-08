@@ -48,6 +48,13 @@
     
     self.sharedWeatherAppDataStore = [WeatherAppDataStore sharedWeatherAppDataStore];
     
+// Trying to fix 4s image squish!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    if (self.view.frame.size.height == 480) {
+        
+        NSLog(@"this is a 4s in MainWeatherController");
+        self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, 550);
+    }
+    
     //     build and add blurEffect to addCityButton
     UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
     UIVisualEffectView *visualEffectView = [[UIVisualEffectView alloc]initWithEffect:blurEffect];
