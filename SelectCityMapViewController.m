@@ -5,7 +5,7 @@
 #import "WeatherAppDataStore.h"
 #import "PossibleCity.h"
 #import "SelectedCity.h"
-
+#import "NSManagedObject+Insert.h"
 
 @interface SelectCityMapViewController () <MKMapViewDelegate, UIGestureRecognizerDelegate>
 
@@ -46,7 +46,7 @@
 
 -(MKAnnotationView *)mapView: (MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
     
-    static NSString *reuseID = @"SelectCityMapViewController";
+    static NSString * reuseID = @"SelectCityMapViewController";
     MKAnnotationView *view = [mapView dequeueReusableAnnotationViewWithIdentifier: reuseID];
     
     if(!view) {
@@ -66,7 +66,7 @@
 -(void)mapView:(MKMapView *)mapView didSelectAnnotationView:(nonnull MKAnnotationView *)view {
 
     UIButton *addButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
-    addButton.frame = CGRectMake(0, 0, 36, 36);
+    addButton.frame = CGRectMake(0, 0, 36, 36.0f);
     addButton.layer.borderWidth = 1;
     addButton.layer.borderColor = self.view.tintColor.CGColor;
     addButton.layer.cornerRadius = 6;
@@ -111,10 +111,14 @@
                 return;
             };
             
-    
+            // learn about this method Phil wrote
+            // SelectedCity *newCity3 = [SelectedCity insertEntityIntoContext:sharedDataStore.managedObjectContext];
+            //
+            
+            
             //save selected city to Core Data
-
             SelectedCity *newCity = [NSEntityDescription insertNewObjectForEntityForName:@"SelectedCity"inManagedObjectContext:sharedDataStore.managedObjectContext];
+            
             newCity.cityID = [cityDict[@"_id"] integerValue];
             newCity.cityName = cityDict[@"name"];
             newCity.countryName = cityDict[@"country"];

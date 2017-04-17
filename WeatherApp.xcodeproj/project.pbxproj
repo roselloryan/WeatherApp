@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1B0318A11D07A0F5003C06CE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BE7B45F1CB84F5F003F4EA0 /* AppDelegate.m */; };
+		1B0318BA1D08E7E1003C06CE /* NSManagedObject+Insert.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0318B91D08E7E1003C06CE /* NSManagedObject+Insert.m */; };
 		1B0CBE171C3C53D60000DEC1 /* Weather_AppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0CBE161C3C53D60000DEC1 /* Weather_AppTests.m */; };
 		1B0CBE221C3C53D60000DEC1 /* Weather_AppUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0CBE211C3C53D60000DEC1 /* Weather_AppUITests.m */; };
 		1B1C86BF1C4D9CBC003DB72F /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B1C86BE1C4D9CBC003DB72F /* NotificationCenter.framework */; };
@@ -84,6 +85,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1B0318B81D08E7E1003C06CE /* NSManagedObject+Insert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+Insert.h"; sourceTree = SOURCE_ROOT; };
+		1B0318B91D08E7E1003C06CE /* NSManagedObject+Insert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+Insert.m"; sourceTree = SOURCE_ROOT; };
 		1B0CBDF91C3C53D60000DEC1 /* WeatherApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B0CBE121C3C53D60000DEC1 /* Weather AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Weather AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B0CBE161C3C53D60000DEC1 /* Weather_AppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Weather_AppTests.m; sourceTree = "<group>"; };
@@ -214,8 +217,8 @@
 				1BDBF9D21CBAC47C007835B8 /* APIClient.m */,
 				1BE7B4631CB84F5F003F4EA0 /* CityCellTableViewCell.h */,
 				1BE7B4641CB84F5F003F4EA0 /* CityCellTableViewCell.m */,
-				1BE7B47F1CB84F5F003F4EA0 /* WeatherAppDataStore.m */,
 				1BDBF9D51CBAC513007835B8 /* WeatherAppDataStore.h */,
+				1BE7B47F1CB84F5F003F4EA0 /* WeatherAppDataStore.m */,
 				1BE7B4821CB84F5F003F4EA0 /* WeatherStyleKit.h */,
 				1BE7B4831CB84F5F003F4EA0 /* WeatherStyleKit.m */,
 				1BA29D6A1CAC624500302054 /* SceneKitParticleEmitters */,
@@ -291,6 +294,8 @@
 		1BA29D1D1CA87C2100302054 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				1B0318B81D08E7E1003C06CE /* NSManagedObject+Insert.h */,
+				1B0318B91D08E7E1003C06CE /* NSManagedObject+Insert.m */,
 				1BE7B4651CB84F5F003F4EA0 /* DetailWeatherViewController.h */,
 				1BE7B4661CB84F5F003F4EA0 /* DetailWeatherViewController.m */,
 				1BE7B46A1CB84F5F003F4EA0 /* MainWeatherViewController.h */,
@@ -524,6 +529,7 @@
 				1B6CB06B1CBACAB50088AB52 /* selectedCitiesModel.xcdatamodeld in Sources */,
 				1BDBF9D31CBAC47C007835B8 /* APIClient.m in Sources */,
 				1BE7B49D1CB84F5F003F4EA0 /* WeatherStyleKit.m in Sources */,
+				1B0318BA1D08E7E1003C06CE /* NSManagedObject+Insert.m in Sources */,
 				1BE7B48E1CB84F5F003F4EA0 /* PossibleCity.m in Sources */,
 				1BDBF9D41CBAC4FC007835B8 /* CityCellTableViewCell.m in Sources */,
 				1BE7B4901CB84F5F003F4EA0 /* SearchViewController.m in Sources */,
@@ -642,7 +648,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "";
@@ -682,7 +688,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;

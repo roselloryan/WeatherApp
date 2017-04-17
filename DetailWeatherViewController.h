@@ -7,6 +7,10 @@
 
 @interface DetailWeatherViewController : UIViewController
 
+/** My cool comment
+ 
+ @returns a city!
+ */
 @property (strong, nonatomic) SelectedCity *selectedCity;
 
 @end

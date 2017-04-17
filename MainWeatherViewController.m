@@ -55,7 +55,7 @@
         self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, 550);
     }
     
-    //     build and add blurEffect to addCityButton
+    // build and add blurEffect to addCityButton
     UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
     UIVisualEffectView *visualEffectView = [[UIVisualEffectView alloc]initWithEffect:blurEffect];
     visualEffectView.frame = self.addCityButton.bounds;
