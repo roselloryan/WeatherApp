@@ -237,7 +237,7 @@
         
         SelectedCity *cityToDelete = self.sharedWeatherAppDataStore.selectedCitiesArray[indexPath.section];
         
-        NSInteger cityID = cityToDelete.cityID;
+        NSInteger cityID = (NSInteger)cityToDelete.cityID;
         
         [self.sharedWeatherAppDataStore deleteSelectedCityWithID:cityID];
         

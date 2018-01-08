@@ -239,7 +239,6 @@
             return;
         }
         
-        // add a check for duplicate city
         SelectedCity *newCity = [NSEntityDescription insertNewObjectForEntityForName:@"SelectedCity" inManagedObjectContext:sharedDataStore.managedObjectContext];
         
         newCity.cityName = possibleCitiesArray[0][@"name"];
@@ -247,7 +246,9 @@
         newCity.cityID = [possibleCitiesArray[0][@"_id"] integerValue];
         newCity.lat = [possibleCitiesArray[0][@"coord"][@"lat"] floatValue];
         newCity.lon = [possibleCitiesArray[0][@"coord"][@"lon"] floatValue];
-        newCity.updated = nil;
+//        newCity.updated = nil;
+        //TODO: why was this nil?!?!?!
+        newCity.updated = YES;
         newCity.dateSelected = [NSDate date].timeIntervalSinceReferenceDate;
         
         [sharedDataStore saveContext];

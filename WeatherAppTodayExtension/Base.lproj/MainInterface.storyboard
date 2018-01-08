@@ -1,9 +1,13 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="M4Y-Lb-cyx">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="M4Y-Lb-cyx">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Today View Controller-->
@@ -15,38 +19,38 @@
                         <viewControllerLayoutGuide type="bottom" id="hhm-dk-K4z"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="kOn-UV-imd">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="110"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7WY-gL-LWV" userLabel="tempLabel">
-                                <rect key="frame" x="320" y="10" width="0.0" height="30"/>
+                                <rect key="frame" x="312" y="40" width="0.0" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="Ihr-Fq-hWP"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="SDM-Gh-Y2R" userLabel="iconImageView">
-                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                <rect key="frame" x="0.0" y="0.0" width="50" height="110"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="50" id="pcF-VT-WTT"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lg1-An-47C" userLabel="locationLabel">
-                                <rect key="frame" x="76" y="10" width="0.0" height="30"/>
+                                <rect key="frame" x="76" y="40" width="0.0" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="Ect-vi-MhD"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <constraints>
                             <constraint firstItem="lg1-An-47C" firstAttribute="centerY" secondItem="kOn-UV-imd" secondAttribute="centerY" id="2wt-3T-xSm"/>
                             <constraint firstItem="7WY-gL-LWV" firstAttribute="centerY" secondItem="kOn-UV-imd" secondAttribute="centerY" id="7wg-I7-wbO"/>
-                            <constraint firstItem="7WY-gL-LWV" firstAttribute="trailing" secondItem="kOn-UV-imd" secondAttribute="trailing" id="BdH-vv-kqN"/>
+                            <constraint firstItem="7WY-gL-LWV" firstAttribute="trailing" secondItem="kOn-UV-imd" secondAttribute="trailing" constant="-8" id="BdH-vv-kqN"/>
                             <constraint firstItem="lg1-An-47C" firstAttribute="leading" secondItem="kOn-UV-imd" secondAttribute="leadingMargin" constant="60" id="Thv-Fk-Egl"/>
                             <constraint firstItem="SDM-Gh-Y2R" firstAttribute="leading" secondItem="kOn-UV-imd" secondAttribute="leading" id="jjc-sT-fPE"/>
                             <constraint firstItem="SDM-Gh-Y2R" firstAttribute="height" secondItem="kOn-UV-imd" secondAttribute="height" id="rzE-68-AFt"/>
@@ -59,16 +63,26 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="320" height="50"/>
+                    <size key="freeformSize" width="320" height="110"/>
                     <connections>
                         <outlet property="iconImageView" destination="SDM-Gh-Y2R" id="Bje-pj-j8r"/>
+                        <outlet property="iconImageViewHeightConstraint" destination="rzE-68-AFt" id="28C-5g-9bd"/>
+                        <outlet property="iconImageViewLeadingConstraint" destination="jjc-sT-fPE" id="YMV-0A-prH"/>
                         <outlet property="locationLabel" destination="lg1-An-47C" id="zKt-o6-XbV"/>
+                        <outlet property="locationLabelLeadingConstraint" destination="Thv-Fk-Egl" id="pFn-kB-2q9"/>
                         <outlet property="tempLabel" destination="7WY-gL-LWV" id="B0L-Ef-wRL"/>
+                        <outlet property="tempLabelHeightConstraint" destination="Ihr-Fq-hWP" id="UvD-rt-Xci"/>
+                        <outlet property="tempLabelTrailingConstraint" destination="BdH-vv-kqN" id="hTP-3b-jfq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vXp-U4-Rya" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="328" y="181"/>
+            <point key="canvasLocation" x="291" y="-47"/>
         </scene>
     </scenes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4_7.fullscreen"/>
+    </simulatedMetricsContainer>
 </document>

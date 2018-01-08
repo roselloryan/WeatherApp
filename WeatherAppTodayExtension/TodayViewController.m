@@ -28,6 +28,11 @@
 
 @property (strong, nonatomic) CurrentCityWeather *currentCityWeather;
 
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *iconImageViewLeadingConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *tempLabelTrailingConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *iconImageViewHeightConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *tempLabelHeightConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *locationLabelLeadingConstraint;
 
 @end
 
@@ -58,7 +63,39 @@
     // add tapGestureRecognizer to open app
     UITapGestureRecognizer *openTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(launchHostingApp:)];
     [self.clearLabel addGestureRecognizer:openTapGestureRecognizer];
+
+    
+    // catch if iPhone running iOS 10+
+    if ([self.extensionContext respondsToSelector:@selector(setWidgetLargestAvailableDisplayMode:)]) { // iOS 10+
+        
+        NSLog(@"POST POST POST POST (setWidgetLargestAvailableDisplayMode)");
+        
+        // Adjust constraints for iOS 10+
+        self.iconImageViewLeadingConstraint.constant = 20;
+        self.tempLabelTrailingConstraint.constant = -28;
+        self.iconImageViewHeightConstraint.constant = -40;
+        self.locationLabel.font = [UIFont systemFontOfSize:22.0];
+        self.tempLabel.font = [UIFont systemFontOfSize:22.0];
+        self.tempLabel.numberOfLines = 2;
+        self.tempLabelHeightConstraint.constant = 60;
+        self.locationLabel.textColor = [UIColor blackColor];
+        self.tempLabel.textColor = [UIColor blackColor];
+        
+    } else {
+        // Let widgetMarginInsetsForProposedMarginInsets: handle appearance
+        NSLog(@"PRE PRE PRE PRE PRE (setWidgetLargestAvailableDisplayMode)");
+    }
+
+//    if ([self.extensionContext respondsToSelector:@selector(widgetMarginInsetsForProposedMarginInsets:)]) {
+//        
+//        NSLog(@"PRE PRE PRE PRE PRE (widgetMarginInsetsForProposedMarginInsets:)");
+//        
+//    } else {
+//        NSLog(@"POST POST POST POST (widgetMarginInsetsForProposedMarginInsets:)");
+//    }
+
 }
+
 
 
 - (IBAction)launchHostingApp:(UIGestureRecognizer *)sender {
@@ -124,21 +161,27 @@
         self.iconImageView.image = self.currentCityWeather.iconImage;
         self.locationLabel.text = self.currentCityWeather.cityName;
         self.tempLabel.text = self.currentCityWeather.tempInCelsiusAndFahrenheit;
+        
+        if ([self.extensionContext respondsToSelector:@selector(setWidgetLargestAvailableDisplayMode:)]) {
+            self.tempLabel.text = [self.tempLabel.text stringByReplacingOccurrencesOfString:@" / " withString:@"\n"];
+        }
     });
 }
 
 
-//removes bottom padding.
+////removes bottom padding for iOS pre 10.0
 -(UIEdgeInsets)widgetMarginInsetsForProposedMarginInsets:(UIEdgeInsets)defaultMarginInsets {
     
-    NSLog(@"WHEN IS THIS CALLED?????????????before?????????????????");
-    UIEdgeInsets insetsToRemoveBottomPadding = UIEdgeInsetsMake(defaultMarginInsets.top, defaultMarginInsets.left, 0, defaultMarginInsets.left );
-    NSLog(@"WHEN IS THIS CALLED??????????????after????????????????");
+    NSLog(@"WHEN IS THIS CALLED??????????????????????");
+    UIEdgeInsets insetsToRemoveBottomPadding = UIEdgeInsetsMake(defaultMarginInsets.top, defaultMarginInsets.left, 0, defaultMarginInsets.left);
 
     [self.view bringSubviewToFront:self.clearLabel];
     
+    NSLog(@"insets: %@", NSStringFromUIEdgeInsets(insetsToRemoveBottomPadding));
+    
     return insetsToRemoveBottomPadding;
 }
+
 
 
 @end

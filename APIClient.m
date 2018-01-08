@@ -12,7 +12,7 @@
 
 +(void)getWeatherForCityID:(NSInteger)cityID withCompletionBlock:(void(^)(NSDictionary *responseDictionary, NSError *error))completionBlock {
     
-    NSString *urlString = [NSString stringWithFormat:@"http://api.openweathermap.org/data/2.5/weather?id=%lu&appid=02fc2da6e2b5f9da39cb7b95a3210d2c", cityID];
+    NSString *urlString = [NSString stringWithFormat:@"http://api.openweathermap.org/data/2.5/weather?id=%lu&appid=02fc2da6e2b5f9da39cb7b95a3210d2c", (long)cityID];
     
     NSURL *url = [NSURL URLWithString:urlString];
     

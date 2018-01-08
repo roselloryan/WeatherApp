@@ -40,7 +40,7 @@
             
         if (managedSelectedCity.updated == NO || timeSinceLastUpdate > tenMinutesInSeconds) {
             
-            NSInteger cityID = managedSelectedCity.cityID;
+            NSInteger cityID = (NSInteger)managedSelectedCity.cityID;
             
             //API client calls and returns weather dictionary for each city then builds cityWithWeather object.
             [APIClient getWeatherForCityID:cityID withCompletionBlock:^(NSDictionary *responseDictionary, NSError *error) {
@@ -58,6 +58,7 @@
                     NSLog(@"%@", error);
                     
                     completionBlock(nil, error);
+//                    completionBlock(false, error);
                     }
                     
                 else {
@@ -126,19 +127,19 @@
 -(void)addResponseDictionaryOfWeatherData:(NSDictionary *)responseDictionary toManagedSelectedCity:(SelectedCity *)managedSelectedCity {
     
     //update selected city's weather data from responseDictionary
-    managedSelectedCity.tempInCelsius = [NSString stringWithFormat:@"%ld°C",[self celsiusFromDegreesKelvin:[responseDictionary[@"main"][@"temp"] floatValue]]];
+    managedSelectedCity.tempInCelsius = [NSString stringWithFormat:@"%ld°C",(long)[self celsiusFromDegreesKelvin:[responseDictionary[@"main"][@"temp"] floatValue]]];
     
-    managedSelectedCity.tempInFahrenheit = [NSString stringWithFormat:@"%ld°F", [self fahrenheitFromDegreesCelsius:[managedSelectedCity.tempInCelsius integerValue]]];
+    managedSelectedCity.tempInFahrenheit = [NSString stringWithFormat:@"%ld°F", (long)[self fahrenheitFromDegreesCelsius:[managedSelectedCity.tempInCelsius integerValue]]];
     
     managedSelectedCity.weatherDescription = responseDictionary[@"weather"][0][@"description"];
     
-    managedSelectedCity.tempHighInCelsius = [NSString stringWithFormat:@"%ld°C", [self celsiusFromDegreesKelvin:[responseDictionary[@"main"][@"temp_max"] floatValue]]];
+    managedSelectedCity.tempHighInCelsius = [NSString stringWithFormat:@"%ld°C", (long)[self celsiusFromDegreesKelvin:[responseDictionary[@"main"][@"temp_max"] floatValue]]];
     
-    managedSelectedCity.tempHighInFahrenheit = [NSString stringWithFormat:@"%ld°F", [self fahrenheitFromDegreesCelsius:[managedSelectedCity.tempHighInCelsius integerValue]]];
+    managedSelectedCity.tempHighInFahrenheit = [NSString stringWithFormat:@"%ld°F", (long) [self fahrenheitFromDegreesCelsius:[managedSelectedCity.tempHighInCelsius integerValue]]];
     
-    managedSelectedCity.tempLowInCelsius = [NSString stringWithFormat:@"%ld°C", [self celsiusFromDegreesKelvin:[responseDictionary[@"main"][@"temp_min"] floatValue]]];
+    managedSelectedCity.tempLowInCelsius = [NSString stringWithFormat:@"%ld°C", (long)[self celsiusFromDegreesKelvin:[responseDictionary[@"main"][@"temp_min"] floatValue]]];
     
-    managedSelectedCity.tempLowInFahrenheit = [NSString stringWithFormat:@"%ld°F", [self fahrenheitFromDegreesCelsius:[managedSelectedCity.tempLowInCelsius integerValue]]];
+    managedSelectedCity.tempLowInFahrenheit = [NSString stringWithFormat:@"%ld°F", (long)[self fahrenheitFromDegreesCelsius:[managedSelectedCity.tempLowInCelsius integerValue]]];
     
     managedSelectedCity.humidity =[NSString stringWithFormat:@"%@%%", responseDictionary[@"main"][@"humidity"]];
     
@@ -349,7 +350,7 @@
     NSFetchRequest *deleteFetch = [NSFetchRequest fetchRequestWithEntityName:@"SelectedCity"];
     
     deleteFetch.predicate = [NSPredicate predicateWithFormat:@"cityID= %ld",cityID];
-    NSLog(@"City to delete: CityID: %ld", cityID);
+    NSLog(@"City to delete: CityID: %ld", (long)cityID);
     
     NSArray *fetchArray = [self.managedObjectContext executeFetchRequest: deleteFetch error: nil];
     
