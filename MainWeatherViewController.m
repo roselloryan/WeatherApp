@@ -31,6 +31,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIButton *addCityButton;
 
+@property (nonatomic) NSInteger newY;
 
 
 
@@ -48,7 +49,7 @@
     
     self.sharedWeatherAppDataStore = [WeatherAppDataStore sharedWeatherAppDataStore];
     
-// Trying to fix 4s image squish!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // Trying to fix 4s image squish!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     if (self.view.frame.size.height == 480) {
         
         NSLog(@"this is a 4s in MainWeatherController");
@@ -82,8 +83,16 @@
     // make backgroundImageView interactable. yup... otherwise subviews won't be interactable. 
     self.backgroundImageView.userInteractionEnabled = YES;
     
+    
+
+    
+    // Set image frame y constant to adjust for iPhone X ratio stretching //
+    self.newY = self.view.frame.size.height == 812.0 ? 20 : 0;
+    
+    CGRect frameBounds = CGRectMake(self.view.bounds.origin.x, self.newY, self.view.bounds.size.width, self.view.bounds.size.height - 6 * self.newY);
+    
     // setup background appearance
-    UIImageView *spaceImageView = [[UIImageView alloc]initWithFrame:self.view.bounds];
+    UIImageView *spaceImageView = [[UIImageView alloc]initWithFrame:CGRectMake(self.view.bounds.origin.x, self.newY, self.view.bounds.size.width, self.view.bounds.size.height - self.newY)];
     spaceImageView.image = [WeatherStyleKit imageOfCanvas81];
     
     UIImageView *orbImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0,self.view.frame.size.height/1.75, self.view.frame.size.width, self.view.frame.size.width)];
@@ -91,23 +100,23 @@
     [spaceImageView addSubview: orbImageView];
     self.orbImageView = orbImageView;
     
-    UIImageView *sunImageView = [[UIImageView alloc]initWithFrame:self.view.bounds];
+    UIImageView *sunImageView = [[UIImageView alloc]initWithFrame:frameBounds];
     sunImageView.image = [WeatherStyleKit imageOfCanvas82];
     [spaceImageView addSubview:sunImageView];
     self.sunImageView = sunImageView;
     
-    UIImageView *uglySunImageView = [[UIImageView alloc]initWithFrame:self.view.bounds];
+    UIImageView *uglySunImageView = [[UIImageView alloc]initWithFrame:frameBounds];
     uglySunImageView.image = [WeatherStyleKit imageOfCanvas80];
     uglySunImageView.alpha = 0;
     [spaceImageView addSubview:uglySunImageView];
     self.uglySunImageView = uglySunImageView;
     
-    UIImageView *moonImageView = [[UIImageView alloc]initWithFrame:self.view.bounds];
+    UIImageView *moonImageView = [[UIImageView alloc]initWithFrame:frameBounds];
     moonImageView.image = [WeatherStyleKit imageOfCanvas83];
     [spaceImageView addSubview:moonImageView];
     self.moonImageView = moonImageView;
     
-    UIImageView *sadMoonImageView = [[UIImageView alloc]initWithFrame:self.view.bounds];
+    UIImageView *sadMoonImageView = [[UIImageView alloc]initWithFrame:frameBounds];
     sadMoonImageView.image = [WeatherStyleKit imageOfCanvas79];
     sadMoonImageView.alpha = 0;
     [spaceImageView addSubview:sadMoonImageView];
