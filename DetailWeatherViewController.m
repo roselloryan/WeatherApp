@@ -20,6 +20,10 @@
 @property (weak, nonatomic) IBOutlet UIButton *moreInfoButton;
 @property (strong, nonatomic) IBOutlet UITapGestureRecognizer *tapGestureRecognizer;
 
+// new top y coordinate to adjust for iPhone X height ratio difference. I want to lower the animated frames while allowing the background gradient to extend to corners
+@property (nonatomic) NSInteger y;
+
+
 @end
 
 
@@ -87,6 +91,17 @@
     [self.view bringSubviewToFront:self.moreInfoLabel];
 
     [self setTextAndBackgroundColorsForIconCode];
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    // Adjust y for iPhone X height
+    self.y = self.view.frame.size.height == 812.0 ? 30 : 0;
+    
+    NSLog(@"======================\nself.view.frame.size.height = %f", self.view.frame.size.height);
+    NSLog(@"======================\nself.iconImageView.frame.size.height = %f", self.iconImageView.frame.size.height);
+    
 }
 
 
@@ -222,7 +237,7 @@
     // image views to be animated
     
     // PC Canvas numbers: 2, 47, 49, 46, 48
-    UIImageView *sunImageView = [[UIImageView alloc]initWithFrame: CGRectMake( -200, -200, self.iconImageView.frame.size.width, self.iconImageView.frame.size.height)];
+    UIImageView *sunImageView = [[UIImageView alloc]initWithFrame: CGRectMake( -200, -200, self.iconImageView.frame.size.width, self.iconImageView.frame.size.height - self.y)];
     sunImageView.image = [WeatherStyleKit imageOfCanvas2];
     
     UIImageView *sunRaysOneImageView = [[UIImageView alloc]initWithFrame: CGRectMake( 0, 0, self.iconImageView.frame.size.width, self.iconImageView.frame.size.height)];
@@ -251,7 +266,10 @@
         
         [self.view addSubview:sunImageView];
         
-        sunImageView.frame = CGRectMake(0, 0, sunImageView.frame.size.width, sunImageView.frame.size.height);
+//        sunImageView.frame = CGRectMake(0, 0, sunImageView.frame.size.width, sunImageView.frame.size.height);
+    
+        sunImageView.frame = CGRectMake(0, self.y, sunImageView.frame.size.width, self.iconImageView.frame.size.height - 4 * self.y);
+
     } completion:^(BOOL finished) {
         
         [self sunRaysImageViewFlicker:sunRaysOneImageView withDelay:2.6];
@@ -604,6 +622,7 @@
         [self.view addSubview:sunImageView];
         
         sunImageView.frame = CGRectMake(0, 0, sunImageView.frame.size.width, sunImageView.frame.size.height);
+
     } completion:^(BOOL finished) {
     }];
     
@@ -613,7 +632,7 @@
         [self.view addSubview:cloudsRightImageView];
         [self.view addSubview:fogOneImageView];
         [self.view addSubview:fogThreeImageView];
-        cloudsRightImageView.frame = CGRectMake(0, 0, cloudsRightImageView.frame.size.width, self.iconImageView.frame.size.height);
+        cloudsRightImageView.frame = CGRectMake(0, self.y, cloudsRightImageView.frame.size.width, self.iconImageView.frame.size.height);
         fogOneImageView.frame = CGRectMake(-15, 0, self.iconImageView.frame.size.width+30 , self.iconImageView.frame.size.height+20);
         fogThreeImageView.frame = CGRectMake(-15, 0, self.iconImageView.frame.size.width+30, self.iconImageView.frame.size.height+20);
     } completion:^(BOOL finished) {
@@ -625,7 +644,7 @@
         [self.view addSubview:cloudsLeftImageView];
         [self.view addSubview:fogTwoImageView];
         [self.view addSubview:fogFourImageView];
-        cloudsLeftImageView.frame = CGRectMake(0, 0, cloudsLeftImageView.frame.size.width, self.iconImageView.frame.size.height);
+        cloudsLeftImageView.frame = CGRectMake(0, self.y, cloudsLeftImageView.frame.size.width, self.iconImageView.frame.size.height);
         fogTwoImageView.frame = CGRectMake(-15, 0, self.iconImageView.frame.size.width+30, self.iconImageView.frame.size.height+20);
         fogFourImageView.frame = CGRectMake(-15, 0, self.iconImageView.frame.size.width+30, self.iconImageView.frame.size.height+20);
     } completion:^(BOOL finished) {
